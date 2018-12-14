@@ -1,0 +1,51 @@
+﻿@model WePlayBall.Models.SubDivision
+
+@{
+    ViewData["Title"] = "Edit SubDivision";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section DefaultHeader{
+    <ul class="uk-breadcrumb">
+        <li>
+            <a asp-controller="Admin" asp-action="DivisionsAll">All</a>
+        </li>
+        <li>
+            <span href="">Edit Subdivision</span>
+        </li>
+    </ul>
+}
+
+<form asp-action="SubDivisionEdit">
+    <fieldset class="uk-fieldset">
+        <legend class="uk-legend">Edit subdivision</legend>
+        <div asp-validation-summary="ModelOnly" class="uk-form-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <div class="uk-margin">
+            <input asp-for="SubDivisionTitle" class="uk-input" placeholder="SubDivision name" />
+            <span asp-validation-for="SubDivisionTitle" class="uk-form-danger"></span>
+        </div>
+
+        <div class="uk-margin">
+            <input asp-for="SubDivisionCode" class="uk-input" placeholder="Four letter code for this new subdivision" />
+            <span asp-validation-for="SubDivisionCode" class="uk-form-danger"></span>
+        </div>
+
+        <div class="uk-margin">
+            <select asp-for="DivisionId" class="uk-select" asp-items="ViewBag.Division"></select>
+        </div>
+
+        <div class="uk-margin">
+            <input type="submit" value="Update" class="uk-button uk-button-primary" />
+        </div>
+
+    </fieldset>
+</form>
+
+<div>
+    <a asp-controller="Admin" asp-action="DivisionsAll">Back to List</a>
+</div>
+
+
+

@@ -28,6 +28,10 @@ namespace WePlayBall.Data
             modelBuilder.Entity<Fixture>().ToTable("Fixture");
             modelBuilder.Entity<GameResult>().ToTable("GameResult");
             modelBuilder.Entity<Rank>().ToTable("Rank");
+            modelBuilder.Entity<SubDivision>().ToTable("SubDivision");
+            modelBuilder.Entity<Team>().ToTable("Team");
+
+
         }
 
 
@@ -38,5 +42,7 @@ namespace WePlayBall.Data
         public DbSet<Fixture> Fixtures { get; set; }
         public DbSet<GameResult> GameResults { get; set; }
         public DbSet<Rank> Rankings { get; set; }
+        public DbSet<SubDivision> SubDivisions { get; set; }
+        public DbSet<Team> Teams { get; set; }
     }
 }

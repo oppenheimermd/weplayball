@@ -1,0 +1,65 @@
+﻿@model WePlayBall.Models.SubDivision
+
+@{
+    ViewData["Title"] = "Subdivision Details";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section DefaultHeader{
+    <ul class="uk-breadcrumb">
+        <li>
+            <a asp-controller="Admin" asp-action="Index">All</a>
+        </li>
+        <li>
+            <span href="">Subdivision details</span>
+        </li>
+    </ul>
+}
+
+<div>
+    <h4>Burger</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SubDivisionTitle)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SubDivisionTitle)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SubDivisionCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SubDivisionCode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Division.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Division.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Division.DivisionName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Division.DivisionName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Division.DivisionCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Division.DivisionCode)
+        </dd>
+
+    </dl>
+</div>
+<div>
+    <a asp-action="EditBurger" asp-controller="Admin" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="SubDivisionsAll" asp-controller="Admin">Back to List</a>
+</div>

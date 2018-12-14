@@ -1,0 +1,46 @@
+﻿@model WePlayBall.Models.Division
+
+@{
+    ViewData["Title"] = "Division Details";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section DefaultHeader{
+    <ul class="uk-breadcrumb">
+        <li>
+            <a asp-controller="Admin" asp-action="Index">All</a>
+        </li>
+        <li>
+            <span href="">Division details</span>
+        </li>
+    </ul>
+}
+
+<div>
+    <h4>Burger</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DivisionName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DivisionName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DivisionCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DivisionCode)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="DivisionEdit" asp-controller="Admin" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="SubDivisionsAll" asp-controller="Admin">Back to List</a>
+</div>

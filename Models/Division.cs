@@ -23,9 +23,5 @@ namespace WePlayBall.Models
         public string DivisionCode { get; set; }
 
         public ICollection<SubDivision> SubDivisions { get; set; }
-
-        //  Optimistic Concurrency  Property 
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
     }
 }

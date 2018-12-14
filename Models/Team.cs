@@ -26,19 +26,12 @@ namespace WePlayBall.Models
         public string TeamCode { get; set; }
 
         [DataMember]
-        public SubDivision SubDivision { get; set; }
+        public virtual SubDivision SubDivision { get; set; }
 
         [DataMember]
         [Required]
         [ForeignKey("SubDivision")]
         public int SubDivisionId { get; set; }
 
-        public ICollection<GameResult> Results { get; set; }
-
-        public ICollection<Fixture> Fixtures { get; set; }
-
-        //  Optimistic Concurrency  Property 
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
     }
 }

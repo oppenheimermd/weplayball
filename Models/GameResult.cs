@@ -17,18 +17,11 @@ namespace WePlayBall.Models
         public DateTime TimeStamp { get; set; }
 
         [DataMember]
-        public Team HomeTeam { get; set; }
-
         [Required]
-        [ForeignKey("HomeTeam")]
         public int HomeTeamId { get; set; }
 
         [DataMember]
-        public Team AwayTeam { get; set; }
-
-        [DataMember]
         [Required]
-        [ForeignKey("AwayTeam")]
         public int AwayTeamId { get; set; }
 
         [Required]
@@ -36,15 +29,11 @@ namespace WePlayBall.Models
         public string Score { get; set; }
 
         [DataMember]
-        public Team Winner { get; set; }
-
-        [DataMember]
         [Required]
-        [ForeignKey("Winner")]
         public int WinnerId { get; set; }
 
         [DataMember]
-        public SubDivision SubDivision { get; set; }
+        public virtual SubDivision SubDivision { get; set; }
 
         [DataMember]
         [Required]
