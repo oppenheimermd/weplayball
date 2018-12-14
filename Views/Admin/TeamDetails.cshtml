@@ -1,0 +1,72 @@
+﻿@model WePlayBall.Models.Team
+
+@{
+    ViewData["Title"] = "Team Details";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section DefaultHeader{
+    <ul class="uk-breadcrumb">
+        <li>
+            <a asp-controller="Admin" asp-action="Index">All</a>
+        </li>
+        <li>
+            <span href="">Team details</span>
+        </li>
+    </ul>
+}
+
+<div>
+    <h4>Burger</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TeamName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TeamName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TeamCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TeamCode)
+        </dd>
+        <dt>
+            Subdivision Code
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SubDivision.SubDivisionCode)
+        </dd>
+        <dt>
+            Subdivision Title
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SubDivision.SubDivisionTitle)
+        </dd>
+        <dt>
+            Division Code
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SubDivision.Division.DivisionCode)
+        </dd>
+        <dt>
+            Division Title
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SubDivision.Division.DivisionName)
+        </dd>
+
+
+    </dl>
+</div>
+<div>
+    <a asp-action="TeamEdit" asp-controller="Admin" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="TeamsAll" asp-controller="Admin">Back to List</a>
+</div>

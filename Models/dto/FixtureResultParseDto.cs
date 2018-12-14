@@ -13,12 +13,8 @@ namespace WePlayBall.Models.DTO
         //  parse format: "Thames Valley Kings 1"
         public string FixtureAwayTeamName { get; set; }
 
-        public string DivisionName { get; set; }
+        //  parse format: "NL Second Division South 18/19 Fixtures***"
+        public string SubDivisionParseName { get; set; }
 
-        public string DivisionCode { get; set; }
-
-        public string SubDivisionName { get; set; }
-
-        public string SubDivisionCode { get; set; }
     }
 }

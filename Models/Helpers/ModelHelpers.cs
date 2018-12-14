@@ -14,7 +14,7 @@ namespace WePlayBall.Models.Helpers
                 DivisionCode = x.DivisionCode
             };
 
-        public static readonly Expression<Func<GameResult, GameResultDto>> AsGameResultDto =
+        /*public static readonly Expression<Func<GameResult, GameResultDto>> AsGameResultDto =
             x => new GameResultDto
             {
                 TimeStamp = x.TimeStamp,
@@ -29,7 +29,7 @@ namespace WePlayBall.Models.Helpers
                 Score = x.Score,
                 WinnerTeamName = x.Winner.TeamName,
                 WinnerTeamCode = x.Winner.TeamCode
-            };
+            };*/
 
         public static readonly Expression<Func<SubDivision, SubDivisionDto>> AsSubDivisionDto =
             x => new SubDivisionDto()

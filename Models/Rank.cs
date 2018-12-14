@@ -7,9 +7,9 @@ namespace WePlayBall.Models
     public class Rank
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [DataMember]
-        public int Id { get; set; }
+        [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int TeamId { get; set; }
 
         /// <summary>
         /// Rank position
@@ -17,10 +17,6 @@ namespace WePlayBall.Models
         [DataMember]
         [Required]
         public int Position { get; set; }
-
-        [DataMember]
-        [Required]
-        public string Team { get; set; }
 
         [Required]
         [DataMember]
@@ -39,26 +35,12 @@ namespace WePlayBall.Models
         public int Points { get; set; }
 
         [DataMember]
-        [Required]
-        [MaxLength(4)]
-        public string ClubCode { get; set; }
-
-        [Required]
-        [DataMember]
-        public string Division { get; set; }
+        public virtual SubDivision SubDivision { get; set; }
 
         [DataMember]
         [Required]
-        [MaxLength(4)]
-        public string DivisionCode { get; set; }
-
-        [Required]
-        [DataMember]
-        public string SubDivision { get; set; }
-
-        [Required]
-        [DataMember]
-        public string SubDivisionCode { get; set; }
+        [ForeignKey("SubDivision")]
+        public int SubDivisionId { get; set; }
 
         //  Optimistic Concurrency  Property 
         [Timestamp]

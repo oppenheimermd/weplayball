@@ -13,35 +13,32 @@ namespace WePlayBall.Models
         public int Id { get; set; }
 
         [Required]
-        [DataMember]
         public DateTime FixtureDate { get; set; }
 
-        [DataMember]
-        public Team HomeTeam { get; set; }
-
         [Required]
-        [ForeignKey("HomeTeam")]
         public int HomeTeamId { get; set; }
 
-        [DataMember]
-        public Team AwayTeam { get; set; }
+        [Required]
+        public string HomeTeamName { get; set; }
+
+        [Required]
+        public string HomeTeamCode { get; set; }
 
         [DataMember]
-        [Required]
-        [ForeignKey("AwayTeam")]
         public int AwayTeamId { get; set; }
 
-        [DataMember]
-        public SubDivision SubDivision { get; set; }
+        [Required]
+        public string AwayTeamName { get; set; }
+
+        [Required]
+        public string AwayTeamCode { get; set; }
+
+        public virtual SubDivision SubDivision { get; set; }
 
         [DataMember]
         [Required]
         [ForeignKey("SubDivision")]
         public int SubDivisionId { get; set; }
 
-
-        //  Optimistic Concurrency  Property 
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
     }
 }

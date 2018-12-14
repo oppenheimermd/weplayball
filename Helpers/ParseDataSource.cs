@@ -7,7 +7,7 @@ using WePlayBall.Models;
 using WePlayBall.Models.DTO;
 using WePlayBall.Security;
 
-namespace WePlayBall.Helpers
+namespace WePlayBall.Service
 {
     public static class ParseDataSource
     {
@@ -483,10 +483,10 @@ namespace WePlayBall.Helpers
             return results;
         }
 
-        public static IEnumerable<Rank> ParseRankingSource(DataSourceRanking source, string division,
+        public static IEnumerable<RankResultParseDto> ParseRankingSource(DataSourceRanking source, string division,
             string divisionCode, string nodeClassname)
         {
-            var results = new List<Rank>();
+            var results = new List<RankResultParseDto>();
             var web = new HtmlWeb();
             var htmlDoc = web.Load(source.Url);
 
@@ -512,18 +512,16 @@ namespace WePlayBall.Helpers
                     var tds = tr.Descendants("TD").ToArray();
 
 
-                    var rslt = new Rank
+                    var rslt = new RankResultParseDto
                     {
                         Position = int.Parse((tds[0].InnerText.Trim())),
-                        Team = tds[1].InnerText.Trim(),
-                        GamesPlayed = tds[2].InnerText.Trim(),
+                        TeamName = tds[1].InnerText.Trim(),
+                        GamesPlayed = int.Parse(tds[2].InnerText.Trim()),
                         GamesWon = int.Parse(tds[3].InnerText.Trim()),
-                        GamesLost = tds[5].InnerText.Trim(),
+                        GamesLost = int.Parse(tds[5].InnerText.Trim()),
                         Points = int.Parse(tds[10].InnerText.Trim()),
-                        ClubCode = GetClubCode(tds[1].InnerText.Trim()),
-                        SubDivision = subDivisionDetails,
-                        SubDivisionCode = GetSubDivisionCode(subDivisionDetails),
-                        Division = division,
+                        SubDivisionName = subDivisionDetails,
+                        DivisionName = division,
                         DivisionCode = divisionCode,
                     };
 
@@ -534,8 +532,9 @@ namespace WePlayBall.Helpers
             return results;
         }
 
-        public static IEnumerable<FixtureResultParseDto> ParseFixturesDataSource(DataSourceFixture source, string division,
-            string divisionCode, string nodeClassname)
+        //  Tested
+        //  14/12/2018
+        public static IEnumerable<FixtureResultParseDto> ParseFixturesDataSource(DataSourceFixture source, string nodeClassname)
         {
             var results = new List<FixtureResultParseDto>();
             var web = new HtmlWeb();
@@ -555,7 +554,6 @@ namespace WePlayBall.Helpers
                 var trsFiltered = trs.Skip(2).Take(takeCount);
                 var trDivisionDetail = trs.First();
                 var subDivisionDetails = trDivisionDetail.InnerText.Trim();
-                var subDivisionCode = GetSubDivisionCodeFixtures(subDivisionDetails);
 
                 foreach (var tr in trsFiltered)
                 {
@@ -568,10 +566,7 @@ namespace WePlayBall.Helpers
                         FixtureDate = GetDate(tds[0].InnerText.Trim()),
                         FixtureHomeTeamName = tds[1].InnerText.Trim(),
                         FixtureAwayTeamName = tds[2].InnerText.Trim(),
-                        DivisionName = division,
-                        DivisionCode = divisionCode,
-                        SubDivisionName = subDivisionDetails,
-                        SubDivisionCode = GetSubDivisionCodeFixtures(subDivisionDetails)
+                        SubDivisionParseName = subDivisionDetails
                     };
 
                     results.Add(rslt);

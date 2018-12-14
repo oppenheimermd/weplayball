@@ -21,15 +21,11 @@ namespace WePlayBall.Models
         public string SubDivisionCode { get; set; }
 
         [DataMember]
-        public Division Division { get; set; }
+        public virtual Division Division { get; set; }
 
         [DataMember]
         [Required]
         [ForeignKey("Division")]
         public int DivisionId { get; set; }
-
-        //  Optimistic Concurrency  Property 
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
     }
 }

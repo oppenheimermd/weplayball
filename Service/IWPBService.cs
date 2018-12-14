@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using WePlayBall.Data;
 using WePlayBall.Models;
 using WePlayBall.Models.DTO;
+using WePlayBall.Models.Helpers;
 
 namespace WePlayBall.Service
 {
@@ -14,46 +15,173 @@ namespace WePlayBall.Service
         //  Queries
 
         /// <summary>
-        /// Return a strong collection of <see cref="DataSourceResult"/> items;
+        /// Get <see cref="Division"/>(s) as pageable
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        PagedResult<Division> GetDivisionsPageable(int? page);
+
+        /// <summary>
+        /// Get <see cref="Division"/> entity by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<Division> GetDivisionAsync(int? id);
+
+        /// <summary>
+        /// <see cref="Division"/> DropDown list data
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<DataSourceResult>> GetDataSourceResultsAsync();
+        Task<List<Division>> GetDivisionDropListAsync();
+
+        /// <summary>
+        /// Get <see cref="SubDivision"/>(s) as pageable
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        PagedResult<SubDivision> GetSubDivisionsPageable(int? page);
+
+        /// <summary>
+        /// Get and instance of a <see cref="SubDivision"/> entity.  Includes <see cref="Division"/>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<SubDivision> GetSubDivisionAsync(int? id);
+
+        /// <summary>
+        /// Get <see cref="Team"/>(s) as pageable.  Includes <see cref="Division"/> and <see cref="SubDivision"/>
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        PagedResult<Team> GetTeamsPageable(int? page);
+
+        /// <summary>
+        /// <see cref="SubDivision"/> DropDown list data
+        /// </summary>
+        /// <returns></returns>
+        Task<List<SubDivision>> GetSubDivisionDropListAsync();
+
+        /// <summary>
+        /// Get a <see cref="Team"/> entity.  Includes <see cref="Division"/> and <see cref="SubDivision"/>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<Team> GetTeamAsync(int? id);
+
+        /// <summary>
+        /// Get a <see cref="DataSourceFixture"/> entity
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<DataSourceFixture> GetFixtureDataSource(int? id);
+
+        /// <summary>
+        /// Get a <see cref="Team"/> by team name query
+        /// </summary>
+        /// <param name="teamName"></param>
+        /// <returns></returns>
+        Task<Team> GetTeamByTeamName(string teamName);
+
+        /// <summary>
+        /// Get a <see cref="SubDivision"/> by name query
+        /// </summary>
+        /// <param name="subdivisionName"></param>
+        /// <returns></returns>
+        Task<SubDivision> GetSubDivisionByName(string subdivisionName);
+
+        /// <summary>
+        /// Get all <see cref="Fixture"/>(s).
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<Fixture>> GetFixturesAsync();
+
+        /// <summary>
+        /// Get <see cref="Fixture"/>(s) as pageable.  Includes <see cref="Division"/> and <see cref="SubDivision"/>
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        PagedResult<Fixture> GetFixturePageable(int? page);
+
 
         //  Persistence
 
         /// <summary>
-        /// Save an instance of a <see cref="DataSourceResult"/> entity
-        /// </summary>
-        /// <param name="dataSourceResult"></param>
-        /// <returns></returns>
-        Task SaveDataSourceResultAsync(DataSourceResult dataSourceResult);
-
-        /// <summary>
-        /// Save an instance of a <see cref="DataSourceRanking"/> entity
-        /// </summary>
-        /// <param name="dataSourceRanking"></param>
-        /// <returns></returns>
-        Task SaveDataSourceRankingAsync(DataSourceRanking dataSourceRanking);
-
-        /// <summary>
-        /// Save an instance of a <see cref="DataSourceFixture"/> entity
-        /// </summary>
-        /// <param name="dataSourceFixture"></param>
-        /// <returns></returns>
-        Task SaveDataSourceFixtureAsync(DataSourceFixture dataSourceFixture);
-
-        /// <summary>
-        /// Save an instance of a <see cref="Division"/> entity
+        /// Create a new instance of a <see cref="Division"/> entity
         /// </summary>
         /// <param name="division"></param>
         /// <returns></returns>
-        Task SaveDivisionAsync(Division division);
+        Task CreateDivisionAsync(Division division);
 
         /// <summary>
-        /// Save and instance of a <see cref="GameResult"/> entity
+        /// Update a <see cref="Division"/> entity
         /// </summary>
-        /// <param name="gameResult"></param>
+        /// <param name="division"></param>
         /// <returns></returns>
-        Task SaveMatchResult(GameResult gameResult);
+        Task<bool> UpdateDivisionAsync(Division division);
+
+        /// <summary>
+        /// Create a new instance of a <see cref="SubDivision"/> entity
+        /// </summary>
+        /// <param name="subdivision"></param>
+        /// <returns></returns>
+        Task CreateSubDivisionAsync(SubDivision subdivision);
+
+        /// <summary>
+        /// Update a <see cref="SubDivision"/> Entity
+        /// </summary>
+        /// <param name="subDivision"></param>
+        /// <returns></returns>
+        Task<bool> UpdateSubDivisionAsync(SubDivision subDivision);
+
+        /// <summary>
+        /// Create a new instance of a <see cref="Team"/>
+        /// </summary>
+        /// <param name="team"></param>
+        /// <returns></returns>
+        Task CreateTeamAsync(Team team);
+
+        /// <summary>
+        /// Update a <see cref="Team"/> Entity
+        /// </summary>
+        /// <param name="team"></param>
+        /// <returns></returns>
+        Task<bool> UpdateTeamAsync(Team team);
+
+        /// <summary>
+        /// Create a new instance of a <see cref="DataSourceFixture"/>
+        /// </summary>
+        /// <param name="dataSourceFixture"></param>
+        /// <returns></returns>
+        Task CreateFixtureDataSourceAsync(DataSourceFixture dataSourceFixture);
+
+        /// <summary>
+        /// Create a new instance of a <see cref="Fixture"/> entity.
+        /// </summary>
+        /// <param name="fixture"></param>
+        /// <returns></returns>
+        Task CreateFixtureAsync(Fixture fixture);
+
+        /// <summary>
+        /// Remove and instance of <see cref="Fixture"/>
+        /// </summary>
+        /// <param name="fixture"></param>
+        /// <returns></returns>
+        Task DeleteFixtureAsync(Fixture fixture);
+
+        //  Helpers
+
+        /// <summary>
+        /// <see cref="SubDivision"/> code already exist?
+        /// </summary>
+        /// <param name="subDivCode"></param>
+        /// <returns></returns>
+        bool SubdivisionCodeExist(string subDivCode);
+
+        /// <summary>
+        /// <see cref="Team"/> code already exist?
+        /// </summary>
+        /// <param name="teamCode"></param>
+        /// <returns></returns>
+        bool TeamCodeExist(string teamCode);
     }
 }
