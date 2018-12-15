@@ -9,7 +9,6 @@ namespace WePlayBall.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [DataMember]
         public int Id { get; set; }
 
         [Required]
@@ -35,7 +34,6 @@ namespace WePlayBall.Models
 
         public virtual SubDivision SubDivision { get; set; }
 
-        [DataMember]
         [Required]
         [ForeignKey("SubDivision")]
         public int SubDivisionId { get; set; }

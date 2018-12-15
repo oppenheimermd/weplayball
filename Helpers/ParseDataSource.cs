@@ -424,65 +424,6 @@ namespace WePlayBall.Service
             resultTem.WinningTeamName = homeScore > awayScore ? resultTem.HomeTeamName : resultTem.AwayTeamName;
         }
 
-        public static IEnumerable<GameResultParseDto> ParseResultDataSource(DataSourceResult source, string divisionCode, string nodeClassname)
-        {
-            var results = new List<GameResultParseDto>();
-            var web = new HtmlWeb();
-            var htmlDoc = web.Load(source.Url);
-            var encrypter = new TyfSimpleAes();
-
-            IEnumerable<string> htmlTables = ParseHtmlSplitTables(htmlDoc.ParsedText, nodeClassname);
-
-
-            foreach (var table in htmlTables)
-            {
-                var htmlDocument = new HtmlDocument();
-                htmlDocument.LoadHtml(table);
-                //Gives you all the TR
-                var trs = htmlDocument.DocumentNode.Descendants("TR").ToArray();
-
-                var takeCount = (trs.Length - 2);
-                var trsFiltered = trs.Skip(2).Take(takeCount);
-                var trDivisionDetail = trs.First();
-                var subDivisionDetails = trDivisionDetail.InnerText.Trim();
-                var subDivisionCode = GetSubDivisionCodeResults(subDivisionDetails);
-
-                foreach (var tr in trsFiltered)
-                {
-                    // Get All the TD's
-                    var tds = tr.Descendants("TD").ToArray();
-
-
-                    var rslt = new GameResultParseDto
-                    {
-                        TimeStamp = GetDate(tds[0].InnerText.Trim()),
-                        //  	Norwich Lowriders
-                        HomeTeamName = tds[1].InnerText.Trim(),
-                        Score = tds[2].InnerText.Trim(),
-                        //  The Bears 2
-                        AwayTeamName = tds[3].InnerText.Trim(),
-                        Division = source.Division,
-                        //  NL First Division North 17/18 Results
-                        SubDivisionName = subDivisionDetails,
-                        DivisionCode = divisionCode,
-                        //  "Norwich Lowriders"
-                        //HomeTeamCode = GetClubCode(tds[1].InnerText.Trim()),
-                        //  "The Bears 2"
-                        //AwayTeamCode = GetClubCode(tds[3].InnerText.Trim())
-                    };
-
-                    GetWinner(rslt);
-
-                    //  Set HashedResult HomeTeam+AwayTeam+Score+TimeStamp
-                    var hashedResult = rslt.HomeTeamName + rslt.AwayTeamName + rslt.Score + rslt.TimeStamp;
-                    rslt.HashedResult = encrypter.Encrypt(hashedResult);
-                    results.Add(rslt);
-                }
-            }
-
-            return results;
-        }
-
         public static IEnumerable<RankResultParseDto> ParseRankingSource(DataSourceRanking source, string division,
             string divisionCode, string nodeClassname)
         {
@@ -569,6 +510,52 @@ namespace WePlayBall.Service
                         SubDivisionParseName = subDivisionDetails
                     };
 
+                    results.Add(rslt);
+                }
+            }
+
+            return results;
+        }
+
+        //  Tested
+        //  15/12/2018
+        public static IEnumerable<GameResultParseDto> ParseResultDataSource(DataSourceResult source, string nodeClassname)
+        {
+            var results = new List<GameResultParseDto>();
+            var web = new HtmlWeb();
+            var htmlDoc = web.Load(source.Url);
+
+            var htmlTables = ParseHtmlSplitTables(htmlDoc.ParsedText, nodeClassname);
+
+
+            foreach (var table in htmlTables)
+            {
+                var htmlDocument = new HtmlDocument();
+                htmlDocument.LoadHtml(table);
+                //Gives you all the TR
+                var trs = htmlDocument.DocumentNode.Descendants("TR").ToArray();
+
+                var takeCount = (trs.Length - 2);
+                var trsFiltered = trs.Skip(2).Take(takeCount);
+                var trDivisionDetail = trs.First();
+                var subDivisionDetails = trDivisionDetail.InnerText.Trim();
+
+                foreach (var tr in trsFiltered)
+                {
+                    // Get All the TD's
+                    var tds = tr.Descendants("TD").ToArray();
+
+
+                    var rslt = new GameResultParseDto
+                    {
+                        TimeStamp = GetDate(tds[0].InnerText.Trim()),
+                        HomeTeamName = tds[1].InnerText.Trim(),
+                        Score = tds[2].InnerText.Trim(),
+                        AwayTeamName = tds[3].InnerText.Trim(),
+                        SubDivisionParseName = subDivisionDetails
+                    };
+
+                    GetWinner(rslt);
                     results.Add(rslt);
                 }
             }

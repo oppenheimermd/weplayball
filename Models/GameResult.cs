@@ -9,44 +9,48 @@ namespace WePlayBall.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [DataMember]
         public int Id { get; set; }
 
         [Required]
-        [DataMember]
         public DateTime TimeStamp { get; set; }
 
-        [DataMember]
         [Required]
         public int HomeTeamId { get; set; }
 
-        [DataMember]
+        [Required]
+        public string HomeTeamName { get; set; }
+
+        [Required]
+        public string HomeTeamCode { get; set; }
+
         [Required]
         public int AwayTeamId { get; set; }
 
         [Required]
-        [DataMember]
+        public string AwayTeamName { get; set; }
+
+        [Required]
+        public string AwayTeamCode { get; set; }
+
+        [Required]
         public string Score { get; set; }
 
-        [DataMember]
         [Required]
-        public int WinnerId { get; set; }
+        public string WinningTeamName { get; set; }
+
+        [Required]
+        public string WinningTeamCode { get; set; }
 
         [DataMember]
         public virtual SubDivision SubDivision { get; set; }
 
-        [DataMember]
         [Required]
         [ForeignKey("SubDivision")]
         public int SubDivisionId { get; set; }
 
         [Required]
-        [DataMember]
-        public string HashedResult { get; set; }
+        public string EncodedResult { get; set; }
 
-        //  Optimistic Concurrency  Property 
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
     }
 }
 
