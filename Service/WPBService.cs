@@ -147,6 +147,42 @@ namespace WePlayBall.Service
             return pageableFixtures;
         }
 
+        public async Task<DataSourceResult> GetResultDataSource(int? id)
+        {
+            var dataSource = await _wpbDataContext.DataSourceResults
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id.Value);
+            return dataSource;
+        }
+
+        public Task<bool> GameResultExistAsync(string encodedResult)
+        {
+            //return _wpbDataContext.GameResults.Any(x => x.EncodedResult == encodedResult);
+
+            return Task.Run<bool>(() =>
+            {
+                return _wpbDataContext.GameResults.Any(x => x.EncodedResult == encodedResult);
+            });
+        }
+
+        public async Task<IEnumerable<GameResult>> GetGameResultsAsync()
+        {
+            var games = await _wpbDataContext.GameResults
+                .AsNoTracking().ToListAsync();
+            return games;
+        }
+
+        public PagedResult<GameResult> GetGameResultsPageable(int? page)
+        {
+            var pageableFixtures = _wpbDataContext.GameResults
+                .Include(x => x.SubDivision)
+                .ThenInclude(subdivision => subdivision.Division)
+                .OrderByDescending(x => x.TimeStamp)
+                .AsNoTracking()
+                .GetPaged(page ?? 1, int.Parse(_siteSettings.ItemsPerPage));
+
+            return pageableFixtures;
+        }
 
         //  Persistence
 
@@ -257,6 +293,27 @@ namespace WePlayBall.Service
             await _wpbDataContext.SaveChangesAsync();
         }
 
+
+        public async Task CreateResultDataSourceAsync(DataSourceResult dataSourceResult)
+        {
+            _wpbDataContext.DataSourceResults.Add(dataSourceResult);
+            await _wpbDataContext.SaveChangesAsync();
+        }
+
+        public async Task CreateGameResultAsync(GameResult gameResult)
+        {
+            _wpbDataContext.GameResults.Add(gameResult);
+            await _wpbDataContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteGameResultAsync(GameResult gameResult)
+        {
+            var resultToDelete = await _wpbDataContext.GameResults.FindAsync(gameResult.Id);
+            _wpbDataContext.GameResults.Remove(resultToDelete);
+            await _wpbDataContext.SaveChangesAsync();
+        }
+
+        //  Helpers
 
         private bool DivisionExists(int id)
         {

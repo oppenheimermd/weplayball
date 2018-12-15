@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WePlayBall.Models;
+using WePlayBall.Security;
 using WePlayBall.Service;
 using WePlayBall.Settings;
 
@@ -23,6 +24,13 @@ namespace WePlayBall.Controllers
         {
             //  tested for div 2
             //await GetFixturesDataAsync();
+            //await GetMatchResultsAsync();
+            /*var gameResults = await _wpbService.GetGameResultsAsync();
+            foreach (var game in gameResults)
+            {
+                await _wpbService.DeleteGameResultAsync(game);
+            }*/
+
             return View();
         }
 
@@ -343,6 +351,12 @@ namespace WePlayBall.Controllers
             return View(fixtures);
         }
 
+        public IActionResult ResultsAll(int? page)
+        {
+            var results = _wpbService.GetGameResultsPageable(page);
+            return View(results);
+        }
+
         /// <summary>
         /// Only need to run this function once
         /// </summary>
@@ -361,6 +375,7 @@ namespace WePlayBall.Controllers
                     //  get Home team details
                     var teamHome = await _wpbService.GetTeamByTeamName(ftr.FixtureHomeTeamName);
                     var teamAway = await _wpbService.GetTeamByTeamName(ftr.FixtureAwayTeamName);
+
                     if (teamHome != null && teamAway != null)
                     {
                         var newFixture = new Fixture()
@@ -390,7 +405,67 @@ namespace WePlayBall.Controllers
                 }
             }
 
+        }
 
+        public async Task GetMatchResultsAsync()
+        {
+            //  We're testing here, so we need only the source for the second division  (div2 id: 2)
+            var resultsDataSource = await _wpbService.GetResultDataSource(2);
+
+            var matchResults = ParseDataSource.ParseResultDataSource(resultsDataSource, resultsDataSource.ClassNameNode);
+
+            foreach (var result in matchResults)
+            {
+                try
+                {
+                    var teamHome = await _wpbService.GetTeamByTeamName(result.HomeTeamName);
+                    var teamAway = await _wpbService.GetTeamByTeamName(result.AwayTeamName);
+
+                    if (teamHome != null && teamAway != null)
+                    {
+                        var winningTeam = (result.WinningTeamName == teamHome.TeamName) ? teamHome : teamAway;
+                        var encodedResult = EncodeGameResult(teamHome.TeamName, teamAway.TeamName, result.TimeStamp);
+
+                        var newResult = new GameResult()
+                        {
+                            TimeStamp =  result.TimeStamp,
+                            HomeTeamId = teamHome.Id,
+                            HomeTeamName = teamHome.TeamName,
+                            HomeTeamCode = teamHome.TeamCode,
+                            AwayTeamId = teamAway.Id,
+                            AwayTeamName = teamAway.TeamName,
+                            AwayTeamCode = teamAway.TeamCode,
+                            Score = result.Score,
+                            WinningTeamName = winningTeam.TeamName,
+                            WinningTeamCode = winningTeam.TeamCode,
+                            //  already have the subdivision in both Home or Away team
+                            SubDivisionId = teamHome.SubDivisionId,
+                            EncodedResult = encodedResult
+                        };
+
+                        var resultExist = await _wpbService.GameResultExistAsync(newResult.EncodedResult);
+                        //  only add if not in db
+                        if (resultExist == false)
+                        {
+                            await _wpbService.CreateGameResultAsync(newResult);
+                        }
+                    }
+                    else
+                    {
+                        throw new System.ArgumentException("Detected null values in either teamHome, teamAway or subDivision variable!");
+                    }
+                }
+                catch (Exception err)
+                {
+                    var msg = err.ToString();
+                    throw;
+                }
+            }
+        }
+
+        public string EncodeGameResult(string homeTeam, string awayTeam, DateTime timestamp)
+        {
+            return homeTeam.Trim().ToLower() + "_" + awayTeam.Trim().ToLower() + "_" + timestamp.ToLongDateString();
         }
     }
 }

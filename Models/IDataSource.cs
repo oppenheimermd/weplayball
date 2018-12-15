@@ -15,8 +15,5 @@ namespace WePlayBall.Models
         /// Last time data was retreived from this data source
         /// </summary>
         DateTime TimeStamp { get; set; }
-        //  Optimistic Concurrency  Property 
-        [Timestamp]
-        byte[] RowVersion { get; set; }
     }
 }

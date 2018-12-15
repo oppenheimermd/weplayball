@@ -103,6 +103,33 @@ namespace WePlayBall.Service
         PagedResult<Fixture> GetFixturePageable(int? page);
 
 
+        /// <summary>
+        /// Get a <see cref="DataSourceResult"/> entity
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<DataSourceResult> GetResultDataSource(int? id);
+
+        /// <summary>
+        /// Determines if a <see cref="GameResult"/> already exist in the database
+        /// </summary>
+        /// <param name="encodedResult"></param>
+        /// <returns></returns>
+        Task<bool> GameResultExistAsync(string encodedResult);
+
+        /// <summary>
+        /// Get all <see cref="GameResult"/>(s)
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<GameResult>> GetGameResultsAsync();
+
+        /// <summary>
+        /// Get <see cref="GameResult"/>(s) as pageable.  Includes <see cref="Division"/> and <see cref="SubDivision"/>
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        PagedResult<GameResult> GetGameResultsPageable(int? page);
+
         //  Persistence
 
         /// <summary>
@@ -167,6 +194,26 @@ namespace WePlayBall.Service
         /// <param name="fixture"></param>
         /// <returns></returns>
         Task DeleteFixtureAsync(Fixture fixture);
+
+        /// <summary>
+        /// Create an instance of a <see cref="DataSourceResult"/>
+        /// </summary>
+        /// <param name="dataSourceResult"></param>
+        /// <returns></returns>
+        Task CreateResultDataSourceAsync(DataSourceResult dataSourceResult);
+
+        /// <summary>
+        /// Create an instance of a <see cref="GameResult"/>
+        /// </summary>
+        /// <param name="gameResult"></param>
+        Task CreateGameResultAsync(GameResult gameResult);
+
+        /// <summary>
+        /// Delete an <see cref="GameResult"/> instance
+        /// </summary>
+        /// <param name="gameResult"></param>
+        /// <returns></returns>
+        Task DeleteGameResultAsync(GameResult gameResult);
 
         //  Helpers
 

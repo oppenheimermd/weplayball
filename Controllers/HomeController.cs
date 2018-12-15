@@ -25,6 +25,7 @@ namespace WePlayBall.Controllers
         {
             //  ***Run
             //await AddDataSourceFixturesAsync();
+            //await AddDataSourceResultsAsync();
             return View();
         }
 
@@ -55,6 +56,10 @@ namespace WePlayBall.Controllers
 
         #region Helpers
 
+        /// <summary>
+        /// Prime the fixture data sources
+        /// </summary>
+        /// <returns></returns>
         public async Task AddDataSourceFixturesAsync()
         {
             var encrypter = new TyfSimpleAes();
@@ -63,7 +68,7 @@ namespace WePlayBall.Controllers
             {
                 new DataSourceFixture()
                 {
-                    DataSourceDescription = @"First Division Fixtures - 2018/2019",
+                    DataSourceDescription = @"First Division Fixtures - 18/19",
                     Division = "Division 1",
                     DivisionCode = "DIV1",
                     Url = @"http://www.gbwba.org.uk/gbwba/index.cfm/the-league/?v=lf&LeagueId=148",
@@ -74,7 +79,7 @@ namespace WePlayBall.Controllers
                 },
                 new DataSourceFixture()
                 {
-                    DataSourceDescription = @"Second Division Fixtures - 2018/2019",
+                    DataSourceDescription = @"Second Division Fixtures - 18/19",
                     Division = "Division 2",
                     DivisionCode = "DIV2",
                     Url = @"http://www.gbwba.org.uk/gbwba/index.cfm/the-league/?v=lf&LeagueId=149",
@@ -85,7 +90,7 @@ namespace WePlayBall.Controllers
                 },
                 new DataSourceFixture()
                 {
-                    DataSourceDescription = @"Third Division Fixtures - 2018/2019",
+                    DataSourceDescription = @"Third Division Fixtures - 18/19",
                     Division = "Division 3",
                     DivisionCode = "DIV3",
                     Url = @"http://www.gbwba.org.uk/gbwba/index.cfm/the-league/?v=lf&LeagueId=150",
@@ -101,44 +106,57 @@ namespace WePlayBall.Controllers
             }
         }
 
-
-
-        /*public async Task GetResultsAsync()
+        public async Task AddDataSourceResultsAsync()
         {
-            var resultsDataSource = await _wpbService.GetDataSourceResultsAsync();
+            var encrypter = new TyfSimpleAes();
+            var collection = new List<DataSourceResult>();
 
-            //  loop through results data source and get results
-            foreach (var src in resultsDataSource)
+            var dataSources = new List<DataSourceResult>()
             {
-                var matchResults = ParseDataSource.ParseResultDataSource(src, src.DivisionCode, src.ClassNameNode);
-                foreach (var mr in matchResults)
+                new DataSourceResult()
                 {
-                    await _wpbService.SaveMatchResult(mr);
+                    DataSourceDescription = @"First Division Results - 18/19",
+                    Division = "Division 1",
+                    DivisionCode = "DIV1",
+                    Url = @"http://www.gbwba.org.uk/gbwba/index.cfm/the-league/?v=lr&LeagueId=148",
+                    UrlHash = encrypter.Encrypt(@"http://www.gbwba.org.uk/gbwba/index.cfm/the-league/?v=lr&LeagueId=148"),
+                    TimeStamp = SystemTime.Now(),
+                    ClassNameNode = @"//table[@class='leagueManager_divisionTable']"
+                },
+                new DataSourceResult()
+                {
+                    DataSourceDescription = @"Second Division Results - 18/19",
+                    Division = "Division 2",
+                    DivisionCode = "DIV2",
+                    Url = @"http://www.gbwba.org.uk/gbwba/index.cfm/the-league/?v=lr&LeagueId=149",
+                    UrlHash = encrypter.Encrypt(@"http://www.gbwba.org.uk/gbwba/index.cfm/the-league/?v=lr&LeagueId=149"),
+                    TimeStamp = SystemTime.Now(),
+                    ClassNameNode = @"//table[@class='leagueManager_divisionTable']"
+                },
+                new DataSourceResult()
+                {
+                    DataSourceDescription = @"Third Division Results - 18/19",
+                    Division = "Division 3",
+                    DivisionCode = "DIV3",
+                    Url = @"http://www.gbwba.org.uk/gbwba/index.cfm/the-league/?v=lr&LeagueId=150",
+                    UrlHash = encrypter.Encrypt(@"http://www.gbwba.org.uk/gbwba/index.cfm/the-league/?v=lr&LeagueId=150"),
+                    TimeStamp = SystemTime.Now(),
+                    ClassNameNode = @"//table[@class='leagueManager_divisionTable']"
+                }
+            };
+
+            foreach (var item in dataSources)
+            {
+                try
+                {
+                    await _wpbService.CreateResultDataSourceAsync(item);
+                }
+                catch (Exception err)
+                {
+                    var msg = err.ToString();
                 }
             }
-        }*/
-
-        /*public async Task GetRankingsAsync()
-        {
-            var rankingsDataSource = await Uow.DataSourceRankings.GetAllAsync();
-
-            //  loop though results
-            foreach (var src in rankingsDataSource)
-            {
-                var rankingResults = ParseDataDource.ParseRankingSource(src, src.Division, src.DivisionCode, src.ClassNameNode);
-                foreach (var rr in rankingResults)
-                {
-                    try
-                    {
-                        await Uow.Ranks.CreateAsync(rr);
-                    }
-                    catch (Exception err)
-                    {
-                        var msg = err.ToString();
-                    }
-                }
-            }
-        }*/
+        }
 
         #endregion
     }
