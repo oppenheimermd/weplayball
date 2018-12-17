@@ -29,6 +29,7 @@
                 <th>
                     Code
                 </th>
+                <th>Division</th>
                 <th></th>
             </tr>
         </thead>
@@ -46,8 +47,19 @@
                         @Html.DisplayFor(modelItem => item.SubDivisionCode)
                     </td>
                     <td>
+                        @Html.DisplayFor(modelItem => item.Division.DivisionCode)
+                    </td>
+                    <td>
                         <a asp-action="SubDivisionEdit" asp-controller="Admin" asp-route-id="@item.Id">Edit</a> |
                         <a asp-action="SubDivisionDetails" asp-controller="Admin" asp-route-id="@item.Id">Details</a> |
+                        @{   
+                            var route_data = new Dictionary<string, string>
+                            {
+                                { "page", "1" },
+                                { "Id", @item.Id.ToString() }
+                            };
+                        }
+                        <a asp-action="TeamsBySubDivision" asp-controller="Admin" asp-all-route-data="route_data">Teams</a>
                     </td>
                 </tr>
             }

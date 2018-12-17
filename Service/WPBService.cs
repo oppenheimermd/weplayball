@@ -53,6 +53,7 @@ namespace WePlayBall.Service
         public PagedResult<SubDivision> GetSubDivisionsPageable(int? page)
         {
             var pageableSubDivisions = _wpbDataContext.SubDivisions
+                .Include("Division")
                 .OrderByDescending(x => x.SubDivisionTitle)
                 .AsNoTracking()
                 .GetPaged(page ?? 1, int.Parse(_siteSettings.ItemsPerPage));
@@ -99,6 +100,17 @@ namespace WePlayBall.Service
             return team;
         }
 
+        public async Task<Team> GetTeamByTeamName(string teamName)
+        {
+            var team = await _wpbDataContext.Teams
+                .Include(x => x.SubDivision)
+                .ThenInclude(subdivision => subdivision.Division)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.TeamName == teamName);
+
+            return team;
+        }
+
         public async Task<DataSourceFixture> GetFixtureDataSource(int? id)
         {
             var dataSource = await _wpbDataContext.DataSourceFixtures
@@ -107,13 +119,11 @@ namespace WePlayBall.Service
             return dataSource;
         }
 
-        public async Task<Team> GetTeamByTeamName(string teamName)
+        public async Task<List<DataSourceFixture>> GetFixtureDataSources()
         {
-            var team = await _wpbDataContext.Teams
-                .Where( x => x.TeamName == teamName)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
-            return team;
+            var results = await _wpbDataContext.DataSourceFixtures
+                .AsNoTracking().ToListAsync();
+            return results;
         }
 
         public async Task<SubDivision> GetSubDivisionByName(string subdivisionName)
@@ -155,10 +165,15 @@ namespace WePlayBall.Service
             return dataSource;
         }
 
+        public async Task<IEnumerable<DataSourceResult>> GetAllResultDataSourceAsync()
+        {
+            var datasources = await _wpbDataContext.DataSourceResults
+                .AsNoTracking().ToListAsync();
+            return datasources;
+        }
+
         public Task<bool> GameResultExistAsync(string encodedResult)
         {
-            //return _wpbDataContext.GameResults.Any(x => x.EncodedResult == encodedResult);
-
             return Task.Run<bool>(() =>
             {
                 return _wpbDataContext.GameResults.Any(x => x.EncodedResult == encodedResult);
@@ -183,6 +198,28 @@ namespace WePlayBall.Service
 
             return pageableFixtures;
         }
+
+        public async Task<DataSourceRanking> GetRankDataSource(int? id)
+        {
+            var dataSource = await _wpbDataContext.DataSourceRankings
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id.Value);
+            return dataSource;
+        }
+
+        public PagedResult<Team> GetTeamsBySubDivisionPageable(int? page, int Id)
+        {
+            var teams = _wpbDataContext.Teams
+                .Include(x => x.SubDivision)
+                .ThenInclude(x => x.Division)
+                .OrderByDescending(x => x.TeamName)
+                .Where(x => x.SubDivision.Id == Id)
+                .AsNoTracking()
+                .GetPaged(page ?? 1, int.Parse(_siteSettings.ItemsPerPage));
+
+            return teams;
+        }
+
 
         //  Persistence
 
@@ -312,6 +349,19 @@ namespace WePlayBall.Service
             _wpbDataContext.GameResults.Remove(resultToDelete);
             await _wpbDataContext.SaveChangesAsync();
         }
+
+        public async Task CreateRankingDataSourceAsync(DataSourceRanking dataSourceRanking)
+        {
+            _wpbDataContext.DataSourceRankings.Add(dataSourceRanking);
+            await _wpbDataContext.SaveChangesAsync();
+        }
+
+        public async Task CreateRankSnapShotAsync(Rank rank)
+        {
+            _wpbDataContext.Rankings.Add(rank);
+            await _wpbDataContext.SaveChangesAsync();
+        }
+        
 
         //  Helpers
 

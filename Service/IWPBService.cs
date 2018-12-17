@@ -35,7 +35,7 @@ namespace WePlayBall.Service
         Task<List<Division>> GetDivisionDropListAsync();
 
         /// <summary>
-        /// Get <see cref="SubDivision"/>(s) as pageable
+        /// Get <see cref="SubDivision"/>(s) as pageable.  Include <see cref="Division"/>
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
@@ -69,6 +69,13 @@ namespace WePlayBall.Service
         Task<Team> GetTeamAsync(int? id);
 
         /// <summary>
+        /// Get a <see cref="Team"/> by team name query.  Includes <see cref="Division"/> and <see cref="SubDivision"/>
+        /// </summary>
+        /// <param name="teamName"></param>
+        /// <returns></returns>
+        Task<Team> GetTeamByTeamName(string teamName);
+
+        /// <summary>
         /// Get a <see cref="DataSourceFixture"/> entity
         /// </summary>
         /// <param name="id"></param>
@@ -76,11 +83,10 @@ namespace WePlayBall.Service
         Task<DataSourceFixture> GetFixtureDataSource(int? id);
 
         /// <summary>
-        /// Get a <see cref="Team"/> by team name query
+        /// Returns a list of <see cref="DataSourceFixture"/>
         /// </summary>
-        /// <param name="teamName"></param>
         /// <returns></returns>
-        Task<Team> GetTeamByTeamName(string teamName);
+        Task<List<DataSourceFixture>> GetFixtureDataSources();
 
         /// <summary>
         /// Get a <see cref="SubDivision"/> by name query
@@ -111,6 +117,12 @@ namespace WePlayBall.Service
         Task<DataSourceResult> GetResultDataSource(int? id);
 
         /// <summary>
+        /// Get enumerable collection of <see cref="DataSourceResult"/>
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<DataSourceResult>> GetAllResultDataSourceAsync();
+
+        /// <summary>
         /// Determines if a <see cref="GameResult"/> already exist in the database
         /// </summary>
         /// <param name="encodedResult"></param>
@@ -129,6 +141,21 @@ namespace WePlayBall.Service
         /// <param name="page"></param>
         /// <returns></returns>
         PagedResult<GameResult> GetGameResultsPageable(int? page);
+
+        /// <summary>
+        /// Get a <see cref="DataSourceRanking"/> entity
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<DataSourceRanking> GetRankDataSource(int? id);
+
+        /// <summary>
+        /// Get teams by <see cref="SubDivision"/> Id. Includes <see cref="SubDivision"/>
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        PagedResult<Team> GetTeamsBySubDivisionPageable(int? page, int Id);
 
         //  Persistence
 
@@ -214,6 +241,20 @@ namespace WePlayBall.Service
         /// <param name="gameResult"></param>
         /// <returns></returns>
         Task DeleteGameResultAsync(GameResult gameResult);
+
+        /// <summary>
+        /// Create an instance of a <see cref="DataSourceRanking"/> entity
+        /// </summary>
+        /// <param name="dataSourceRanking"></param>
+        /// <returns></returns>
+        Task CreateRankingDataSourceAsync(DataSourceRanking dataSourceRanking);
+
+        /// <summary>
+        /// Create an instance of the weekly <see cref="Rank"/> entity
+        /// </summary>
+        /// <param name="rank"></param>
+        /// <returns></returns>
+        Task CreateRankSnapShotAsync(Rank rank);
 
         //  Helpers
 

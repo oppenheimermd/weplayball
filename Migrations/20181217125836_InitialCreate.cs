@@ -20,8 +20,7 @@ namespace weplayball.Migrations
                     DivisionCode = table.Column<string>(maxLength: 4, nullable: false),
                     UrlHash = table.Column<string>(nullable: false),
                     ClassNameNode = table.Column<string>(nullable: false),
-                    TimeStamp = table.Column<DateTime>(nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    TimeStamp = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,8 +39,7 @@ namespace weplayball.Migrations
                     DivisionCode = table.Column<string>(maxLength: 4, nullable: false),
                     UrlHash = table.Column<string>(nullable: false),
                     ClassNameNode = table.Column<string>(nullable: false),
-                    TimeStamp = table.Column<DateTime>(nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    TimeStamp = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,13 +53,12 @@ namespace weplayball.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     DataSourceDescription = table.Column<string>(maxLength: 300, nullable: false),
-                    Url = table.Column<string>(nullable: true),
-                    Division = table.Column<string>(nullable: true),
+                    Url = table.Column<string>(nullable: false),
+                    Division = table.Column<string>(nullable: false),
                     DivisionCode = table.Column<string>(maxLength: 4, nullable: false),
                     UrlHash = table.Column<string>(nullable: false),
                     TimeStamp = table.Column<DateTime>(nullable: false),
-                    ClassNameNode = table.Column<string>(nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: false)
+                    ClassNameNode = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,8 +72,7 @@ namespace weplayball.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     DivisionName = table.Column<string>(maxLength: 100, nullable: false),
-                    DivisionCode = table.Column<string>(maxLength: 4, nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    DivisionCode = table.Column<string>(maxLength: 4, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,8 +87,7 @@ namespace weplayball.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     SubDivisionTitle = table.Column<string>(nullable: false),
                     SubDivisionCode = table.Column<string>(maxLength: 4, nullable: false),
-                    DivisionId = table.Column<int>(nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    DivisionId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -113,9 +108,12 @@ namespace weplayball.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     FixtureDate = table.Column<DateTime>(nullable: false),
                     HomeTeamId = table.Column<int>(nullable: false),
+                    HomeTeamName = table.Column<string>(nullable: false),
+                    HomeTeamCode = table.Column<string>(nullable: false),
                     AwayTeamId = table.Column<int>(nullable: false),
-                    SubDivisionId = table.Column<int>(nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    AwayTeamName = table.Column<string>(nullable: false),
+                    AwayTeamCode = table.Column<string>(nullable: false),
+                    SubDivisionId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -136,12 +134,16 @@ namespace weplayball.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     TimeStamp = table.Column<DateTime>(nullable: false),
                     HomeTeamId = table.Column<int>(nullable: false),
+                    HomeTeamName = table.Column<string>(nullable: false),
+                    HomeTeamCode = table.Column<string>(nullable: false),
                     AwayTeamId = table.Column<int>(nullable: false),
+                    AwayTeamName = table.Column<string>(nullable: false),
+                    AwayTeamCode = table.Column<string>(nullable: false),
                     Score = table.Column<string>(nullable: false),
-                    WinnerId = table.Column<int>(nullable: false),
+                    WinningTeamName = table.Column<string>(nullable: false),
+                    WinningTeamCode = table.Column<string>(nullable: false),
                     SubDivisionId = table.Column<int>(nullable: false),
-                    HashedResult = table.Column<string>(nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    EncodedResult = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -158,18 +160,20 @@ namespace weplayball.Migrations
                 name: "Rank",
                 columns: table => new
                 {
-                    TeamId = table.Column<int>(nullable: false),
+                    RankEncoded = table.Column<string>(nullable: false),
                     Position = table.Column<int>(nullable: false),
-                    GamesPlayed = table.Column<string>(nullable: false),
+                    GamesPlayed = table.Column<int>(nullable: false),
                     GamesWon = table.Column<int>(nullable: false),
-                    GamesLost = table.Column<string>(nullable: false),
+                    GamesLost = table.Column<int>(nullable: false),
                     Points = table.Column<int>(nullable: false),
                     SubDivisionId = table.Column<int>(nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    TeamId = table.Column<int>(nullable: false),
+                    TeamCode = table.Column<string>(nullable: false),
+                    TeamName = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rank", x => x.TeamId);
+                    table.PrimaryKey("PK_Rank", x => x.RankEncoded);
                     table.ForeignKey(
                         name: "FK_Rank_SubDivision_SubDivisionId",
                         column: x => x.SubDivisionId,
@@ -186,8 +190,7 @@ namespace weplayball.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     TeamName = table.Column<string>(maxLength: 200, nullable: false),
                     TeamCode = table.Column<string>(maxLength: 4, nullable: false),
-                    SubDivisionId = table.Column<int>(nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    SubDivisionId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

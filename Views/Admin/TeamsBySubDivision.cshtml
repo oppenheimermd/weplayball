@@ -1,8 +1,10 @@
 ﻿@model WePlayBall.Models.Helpers.PagedResult<WePlayBall.Models.Team>
 
 @{
-    ViewData["Title"] = "Teams Index";
+    ViewData["Title"] = "Teams By SubDivision";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var subDivisionIdCurrent = ViewBag.SubDivisionId;
+    var subDivisionName = ViewBag.SubDivisionName;
 }
 
 @section DefaultHeader{
@@ -14,7 +16,7 @@
 }
 
 <p>
-    <a asp-action="TeamCreate" asp-controller="Admin">Create New</a>
+    SubDivision: @subDivisionName
 </p>
 
 <table class="uk-table uk-table-divide uk-table-hover">
@@ -41,27 +43,28 @@
     <tbody>
         @foreach (var item in Model.Results)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TeamName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TeamCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubDivision.SubDivisionCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubDivision.Division.DivisionCode)
-            </td>
-            <td>
-                <a asp-action="TeamEdit" asp-controller="Admin" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="TeamDetails" asp-controller="Admin" asp-route-id="@item.Id">Details</a> |
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeamName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeamCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubDivision.SubDivisionCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubDivision.Division.DivisionCode)
+                </td>
+                <td>
+                    <a asp-action="TeamEdit" asp-controller="Admin" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="TeamDetails" asp-controller="Admin" asp-route-id="@item.Id">Details</a>
+                    
+                </td>
+            </tr>
         }
     </tbody>
 </table>
@@ -114,3 +117,5 @@
 
     }
 </div>
+
+

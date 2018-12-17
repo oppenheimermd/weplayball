@@ -31,7 +31,9 @@ namespace WePlayBall.Data
             modelBuilder.Entity<SubDivision>().ToTable("SubDivision");
             modelBuilder.Entity<Team>().ToTable("Team");
 
-
+            modelBuilder.Entity<Team>()
+                .HasIndex(x => x.TeamCode)
+                .IsUnique();
         }
 
 
