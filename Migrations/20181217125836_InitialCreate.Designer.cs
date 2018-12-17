@@ -10,8 +10,8 @@ using WePlayBall.Data;
 namespace weplayball.Migrations
 {
     [DbContext(typeof(WPBDataContext))]
-    [Migration("20181215171151_DB_TBL_Updates")]
-    partial class DB_TBL_Updates
+    [Migration("20181217125836_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -221,13 +221,11 @@ namespace weplayball.Migrations
 
             modelBuilder.Entity("WePlayBall.Models.Rank", b =>
                 {
-                    b.Property<int>("TeamId");
+                    b.Property<string>("RankEncoded");
 
-                    b.Property<string>("GamesLost")
-                        .IsRequired();
+                    b.Property<int>("GamesLost");
 
-                    b.Property<string>("GamesPlayed")
-                        .IsRequired();
+                    b.Property<int>("GamesPlayed");
 
                     b.Property<int>("GamesWon");
 
@@ -237,7 +235,15 @@ namespace weplayball.Migrations
 
                     b.Property<int>("SubDivisionId");
 
-                    b.HasKey("TeamId");
+                    b.Property<string>("TeamCode")
+                        .IsRequired();
+
+                    b.Property<int>("TeamId");
+
+                    b.Property<string>("TeamName")
+                        .IsRequired();
+
+                    b.HasKey("RankEncoded");
 
                     b.HasIndex("SubDivisionId");
 

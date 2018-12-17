@@ -8,9 +8,9 @@ namespace WePlayBall.Models.DTO
         public int GamesPlayed { get; set; }
         public int GamesWon { get; set; }
         public int GamesLost { get; set; }
+        public int BasketsFor { get; set; }
+        public int BasketsAganist { get; set; }
+        public int PointsDifference { get; set; }
         public int Points { get; set; }
-        public string SubDivisionName { get; set; }
-        public string DivisionName { get; set; }
-        public string DivisionCode { get; set; }
     }
 }

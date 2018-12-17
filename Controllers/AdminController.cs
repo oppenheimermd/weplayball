@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using WePlayBall.Helpers;
 using WePlayBall.Models;
 using WePlayBall.Security;
 using WePlayBall.Service;
@@ -22,14 +24,15 @@ namespace WePlayBall.Controllers
 
         public async Task<IActionResult> Index(int? page)
         {
-            //  tested for div 2
             //await GetFixturesDataAsync();
-            //await GetMatchResultsAsync();
+            await GetMatchResultsAsync();
+
             /*var gameResults = await _wpbService.GetGameResultsAsync();
             foreach (var game in gameResults)
             {
                 await _wpbService.DeleteGameResultAsync(game);
             }*/
+            //await GetRankResultsAsync();
 
             return View();
         }
@@ -72,7 +75,6 @@ namespace WePlayBall.Controllers
             if (!ModelState.IsValid) return View(division);
 
             division.DivisionCode = division.DivisionCode.ToUpper();
-
 
             //  Check that code is unique
             await _wpbService.CreateDivisionAsync(division);
@@ -343,6 +345,19 @@ namespace WePlayBall.Controllers
             return NotFound();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> TeamsBySubDivision(int? page, string Id)
+        {
+            var subDivId = int.Parse(Id);
+            var pageNumber = page ?? 1;
+            var subDivision = await _wpbService.GetSubDivisionAsync(subDivId);
+            var teams = _wpbService.GetTeamsBySubDivisionPageable(pageNumber, subDivId);
+
+            ViewData["SubDivisionId"] = subDivision.Id;
+            ViewData["SubDivisionName"] = subDivision.SubDivisionTitle;
+            return View(teams);
+        }
+
         //  Fixture Datasource
 
         public IActionResult FixtureAll(int? page)
@@ -357,51 +372,88 @@ namespace WePlayBall.Controllers
             return View(results);
         }
 
+        //  Run once only
+        //  Run on 17/12/2018
+        public async Task AddDivisionsAsync()
+        {
+
+            var dataSources = new List<Division>()
+            {
+                new Division()
+                {
+
+                    DivisionName = "NL First Division 18/19",
+                    DivisionCode = "DIV1",
+                },
+                new Division()
+                {
+                    DivisionName = "NL Second Division 18/19",
+                    DivisionCode = "DIV2"
+                },
+                new Division()
+                {
+                    DivisionName = "NL Third Division 18/19",
+                    DivisionCode = "DIV3",
+                }
+            };
+
+            foreach (var item in dataSources)
+            {
+                await _wpbService.CreateDivisionAsync(item);
+            }
+        }
+
         /// <summary>
         /// Only need to run this function once
+        /// RUN COMPLETE
         /// </summary>
         /// <returns></returns>
         public async Task GetFixturesDataAsync()
         {
-            //  We're testing here, so get the one and only fixture datasouce in the db currenlty (div2 id: 2)
-            var fixturesDataSource = await _wpbService.GetFixtureDataSource(2);
+            //  Get all the fixtures dataSources
+            var fixturesDataSource = await _wpbService.GetFixtureDataSources();
 
-            var fixturesResults = ParseDataSource.ParseFixturesDataSource(fixturesDataSource, fixturesDataSource.ClassNameNode);
-
-            foreach (var ftr in fixturesResults)
+            foreach (var src in fixturesDataSource)
             {
-                try
-                {
-                    //  get Home team details
-                    var teamHome = await _wpbService.GetTeamByTeamName(ftr.FixtureHomeTeamName);
-                    var teamAway = await _wpbService.GetTeamByTeamName(ftr.FixtureAwayTeamName);
+                var fixturesResults =
+                    ParseDataSource.ParseFixturesDataSource(src, src.ClassNameNode);
 
-                    if (teamHome != null && teamAway != null)
+                foreach (var ftr in fixturesResults)
+                {
+                    try
                     {
-                        var newFixture = new Fixture()
+                        //  get Home team details
+                        var teamHome = await _wpbService.GetTeamByTeamName(ftr.FixtureHomeTeamName);
+                        var teamAway = await _wpbService.GetTeamByTeamName(ftr.FixtureAwayTeamName);
+
+                        if (teamHome != null && teamAway != null)
                         {
-                            FixtureDate = ftr.FixtureDate,
-                            HomeTeamId = teamHome.Id,
-                            HomeTeamName = teamHome.TeamName,
-                            HomeTeamCode = teamHome.TeamCode,
-                            AwayTeamId = teamAway.Id,
-                            AwayTeamName = teamAway.TeamName,
-                            AwayTeamCode = teamAway.TeamCode,
-                            //  already have the subdivision in both Home or Away team
-                            SubDivisionId = teamHome.SubDivisionId
-                        };
+                            var newFixture = new Fixture()
+                            {
+                                FixtureDate = ftr.FixtureDate,
+                                HomeTeamId = teamHome.Id,
+                                HomeTeamName = teamHome.TeamName,
+                                HomeTeamCode = teamHome.TeamCode,
+                                AwayTeamId = teamAway.Id,
+                                AwayTeamName = teamAway.TeamName,
+                                AwayTeamCode = teamAway.TeamCode,
+                                //  already have the subdivision in both Home or Away team
+                                SubDivisionId = teamHome.SubDivisionId
+                            };
 
-                        //  Check for null values!!
-                        await _wpbService.CreateFixtureAsync(newFixture);
+                            //  Check for null values!!
+                            await _wpbService.CreateFixtureAsync(newFixture);
+                        }
+                        else
+                        {
+                            throw new System.ArgumentException(
+                                "Detected null values in either teamHome, teamAway or subDivision variable!");
+                        }
                     }
-                    else
+                    catch (Exception err)
                     {
-                        throw new System.ArgumentException("Detected null values in either teamHome, teamAway or subDivision variable!");
+                        var msg = err.ToString();
                     }
-                }
-                catch (Exception err)
-                {
-                    var msg = err.ToString();
                 }
             }
 
@@ -409,50 +461,99 @@ namespace WePlayBall.Controllers
 
         public async Task GetMatchResultsAsync()
         {
+            //  Get all the data sources for results
+            var resultsDataSource = await _wpbService.GetAllResultDataSourceAsync();
+
+            foreach (var result in resultsDataSource)
+            {
+                var matchResults =
+                    ParseDataSource.ParseResultDataSource(result, result.ClassNameNode);
+
+                foreach (var game in matchResults)
+                {
+                    try
+                    {
+                        var teamHome = await _wpbService.GetTeamByTeamName(game.HomeTeamName);
+                        var teamAway = await _wpbService.GetTeamByTeamName(game.AwayTeamName);
+
+                        if (teamHome != null && teamAway != null)
+                        {
+                            var winningTeam = (game.WinningTeamName == teamHome.TeamName) ? teamHome : teamAway;
+                            var encodedResult = EncodeGameResult(teamHome.TeamName, teamAway.TeamName, result.TimeStamp);
+
+                            var newResult = new GameResult()
+                            {
+                                TimeStamp = game.TimeStamp,
+                                HomeTeamId = teamHome.Id,
+                                HomeTeamName = teamHome.TeamName,
+                                HomeTeamCode = teamHome.TeamCode,
+                                AwayTeamId = teamAway.Id,
+                                AwayTeamName = teamAway.TeamName,
+                                AwayTeamCode = teamAway.TeamCode,
+                                Score = game.Score,
+                                WinningTeamName = winningTeam.TeamName,
+                                WinningTeamCode = winningTeam.TeamCode,
+                                //  already have the subdivision in both Home or Away team
+                                SubDivisionId = teamHome.SubDivisionId,
+                                EncodedResult = encodedResult
+                            };
+
+                            var resultExist = await _wpbService.GameResultExistAsync(newResult.EncodedResult);
+                            //  only add if not in db
+                            if (resultExist == false)
+                            {
+                                await _wpbService.CreateGameResultAsync(newResult);
+                            }
+                        }
+                        else
+                        {
+                            throw new System.ArgumentException(
+                                "Detected null values in either teamHome, teamAway or subDivision variable!");
+                        }
+                    }
+                    catch (Exception err)
+                    {
+                        var msg = err.ToString();
+                    }
+                }
+            }
+        }
+
+        public async Task GetRankResultsAsync()
+        {
             //  We're testing here, so we need only the source for the second division  (div2 id: 2)
-            var resultsDataSource = await _wpbService.GetResultDataSource(2);
+            var resultsDataSource = await _wpbService.GetRankDataSource(2);
 
-            var matchResults = ParseDataSource.ParseResultDataSource(resultsDataSource, resultsDataSource.ClassNameNode);
+            var rankingsResults =
+                ParseDataSource.ParseRankingSource(resultsDataSource, resultsDataSource.ClassNameNode);
+            var timeStamp = DateTime.Now;
 
-            foreach (var result in matchResults)
+            foreach (var result in rankingsResults)
             {
                 try
                 {
-                    var teamHome = await _wpbService.GetTeamByTeamName(result.HomeTeamName);
-                    var teamAway = await _wpbService.GetTeamByTeamName(result.AwayTeamName);
-
-                    if (teamHome != null && teamAway != null)
+                    var team = await _wpbService.GetTeamByTeamName(result.TeamName);
+                    if (team != null)
                     {
-                        var winningTeam = (result.WinningTeamName == teamHome.TeamName) ? teamHome : teamAway;
-                        var encodedResult = EncodeGameResult(teamHome.TeamName, teamAway.TeamName, result.TimeStamp);
-
-                        var newResult = new GameResult()
+                        var newRanking = new Rank()
                         {
-                            TimeStamp =  result.TimeStamp,
-                            HomeTeamId = teamHome.Id,
-                            HomeTeamName = teamHome.TeamName,
-                            HomeTeamCode = teamHome.TeamCode,
-                            AwayTeamId = teamAway.Id,
-                            AwayTeamName = teamAway.TeamName,
-                            AwayTeamCode = teamAway.TeamCode,
-                            Score = result.Score,
-                            WinningTeamName = winningTeam.TeamName,
-                            WinningTeamCode = winningTeam.TeamCode,
-                            //  already have the subdivision in both Home or Away team
-                            SubDivisionId = teamHome.SubDivisionId,
-                            EncodedResult = encodedResult
+                            RankEncoded = EncodeRankSnapshot(team.TeamName, team.SubDivision.SubDivisionCode, timeStamp),
+                            Position = result.Position,
+                            GamesPlayed = result.GamesPlayed,
+                            GamesWon = result.GamesWon,
+                            GamesLost = result.GamesLost,
+                            Points = result.Points,
+                            SubDivisionId = team.SubDivision.Id,
+                            TeamId = team.Id,
+                            TeamName = team.TeamName,
+                            TeamCode = team.TeamCode
                         };
 
-                        var resultExist = await _wpbService.GameResultExistAsync(newResult.EncodedResult);
-                        //  only add if not in db
-                        if (resultExist == false)
-                        {
-                            await _wpbService.CreateGameResultAsync(newResult);
-                        }
+                        await _wpbService. CreateRankSnapShotAsync(newRanking);
                     }
                     else
                     {
-                        throw new System.ArgumentException("Detected null values in either teamHome, teamAway or subDivision variable!");
+                        throw new System.ArgumentException("Detected null values in team variable!");
                     }
                 }
                 catch (Exception err)
@@ -466,6 +567,11 @@ namespace WePlayBall.Controllers
         public string EncodeGameResult(string homeTeam, string awayTeam, DateTime timestamp)
         {
             return homeTeam.Trim().ToLower() + "_" + awayTeam.Trim().ToLower() + "_" + timestamp.ToLongDateString();
+        }
+
+        public string EncodeRankSnapshot(string teamName, string subDivisionCode, DateTime timeStamp)
+        {
+            return teamName.ToLower() + "_" + subDivisionCode.ToLower() + timeStamp;
         }
     }
 }

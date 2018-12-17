@@ -9,7 +9,7 @@ namespace WePlayBall.Models
         [Key]
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int TeamId { get; set; }
+        public string RankEncoded { get; set; }
 
         /// <summary>
         /// Rank position
@@ -18,13 +18,13 @@ namespace WePlayBall.Models
         public int Position { get; set; }
 
         [Required]
-        public string GamesPlayed { get; set; }
+        public int GamesPlayed { get; set; }
 
         [Required]
         public int GamesWon { get; set; }
 
         [Required]
-        public string GamesLost { get; set; }
+        public int GamesLost { get; set; }
 
         [Required]
         public int Points { get; set; }
@@ -35,5 +35,14 @@ namespace WePlayBall.Models
         [Required]
         [ForeignKey("SubDivision")]
         public int SubDivisionId { get; set; }
+
+        [Required]
+        public int TeamId { get; set; }
+
+        [Required]
+        public string TeamCode { get; set; }
+
+        [Required]
+        public string TeamName { get; set; }
     }
 }

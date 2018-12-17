@@ -10,8 +10,8 @@ using WePlayBall.Data;
 namespace weplayball.Migrations
 {
     [DbContext(typeof(WPBDataContext))]
-    [Migration("20181214135115_SubDivision_Tbl_Correction")]
-    partial class SubDivision_Tbl_Correction
+    [Migration("20181217141842_TBL_Team_UniqueConstraint")]
+    partial class TBL_Team_UniqueConstraint
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,10 +40,6 @@ namespace weplayball.Migrations
                     b.Property<string>("DivisionCode")
                         .IsRequired()
                         .HasMaxLength(4);
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<DateTime>("TimeStamp");
 
@@ -79,10 +75,6 @@ namespace weplayball.Migrations
                         .IsRequired()
                         .HasMaxLength(4);
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<DateTime>("TimeStamp");
 
                     b.Property<string>("Url")
@@ -110,20 +102,17 @@ namespace weplayball.Migrations
                         .IsRequired()
                         .HasMaxLength(300);
 
-                    b.Property<string>("Division");
+                    b.Property<string>("Division")
+                        .IsRequired();
 
                     b.Property<string>("DivisionCode")
                         .IsRequired()
                         .HasMaxLength(4);
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<DateTime>("TimeStamp");
 
-                    b.Property<string>("Url");
+                    b.Property<string>("Url")
+                        .IsRequired();
 
                     b.Property<string>("UrlHash")
                         .IsRequired();
@@ -158,15 +147,23 @@ namespace weplayball.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AwayTeamCode")
+                        .IsRequired();
+
                     b.Property<int>("AwayTeamId");
+
+                    b.Property<string>("AwayTeamName")
+                        .IsRequired();
 
                     b.Property<DateTime>("FixtureDate");
 
+                    b.Property<string>("HomeTeamCode")
+                        .IsRequired();
+
                     b.Property<int>("HomeTeamId");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
+                    b.Property<string>("HomeTeamName")
+                        .IsRequired();
 
                     b.Property<int>("SubDivisionId");
 
@@ -183,16 +180,24 @@ namespace weplayball.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AwayTeamCode")
+                        .IsRequired();
+
                     b.Property<int>("AwayTeamId");
 
-                    b.Property<string>("HashedResult")
+                    b.Property<string>("AwayTeamName")
+                        .IsRequired();
+
+                    b.Property<string>("EncodedResult")
+                        .IsRequired();
+
+                    b.Property<string>("HomeTeamCode")
                         .IsRequired();
 
                     b.Property<int>("HomeTeamId");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
+                    b.Property<string>("HomeTeamName")
+                        .IsRequired();
 
                     b.Property<string>("Score")
                         .IsRequired();
@@ -201,7 +206,11 @@ namespace weplayball.Migrations
 
                     b.Property<DateTime>("TimeStamp");
 
-                    b.Property<int>("WinnerId");
+                    b.Property<string>("WinningTeamCode")
+                        .IsRequired();
+
+                    b.Property<string>("WinningTeamName")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -212,13 +221,11 @@ namespace weplayball.Migrations
 
             modelBuilder.Entity("WePlayBall.Models.Rank", b =>
                 {
-                    b.Property<int>("TeamId");
+                    b.Property<string>("RankEncoded");
 
-                    b.Property<string>("GamesLost")
-                        .IsRequired();
+                    b.Property<int>("GamesLost");
 
-                    b.Property<string>("GamesPlayed")
-                        .IsRequired();
+                    b.Property<int>("GamesPlayed");
 
                     b.Property<int>("GamesWon");
 
@@ -226,13 +233,17 @@ namespace weplayball.Migrations
 
                     b.Property<int>("Position");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<int>("SubDivisionId");
 
-                    b.HasKey("TeamId");
+                    b.Property<string>("TeamCode")
+                        .IsRequired();
+
+                    b.Property<int>("TeamId");
+
+                    b.Property<string>("TeamName")
+                        .IsRequired();
+
+                    b.HasKey("RankEncoded");
 
                     b.HasIndex("SubDivisionId");
 
@@ -267,10 +278,6 @@ namespace weplayball.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<int>("SubDivisionId");
 
                     b.Property<string>("TeamCode")
@@ -284,6 +291,9 @@ namespace weplayball.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SubDivisionId");
+
+                    b.HasIndex("TeamCode")
+                        .IsUnique();
 
                     b.ToTable("Team");
                 });
