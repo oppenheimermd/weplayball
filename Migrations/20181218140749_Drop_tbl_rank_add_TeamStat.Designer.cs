@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WePlayBall.Data;
 
 namespace weplayball.Migrations
 {
     [DbContext(typeof(WPBDataContext))]
-    partial class WPBDataContextModelSnapshot : ModelSnapshot
+    [Migration("20181218140749_Drop_tbl_rank_add_TeamStat")]
+    partial class Drop_tbl_rank_add_TeamStat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

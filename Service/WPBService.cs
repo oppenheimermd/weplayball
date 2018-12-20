@@ -220,6 +220,13 @@ namespace WePlayBall.Service
             return teams;
         }
 
+        public async Task<List<DataSourceRanking>> GetRankingDataSources()
+        {
+            var results = await _wpbDataContext.DataSourceRankings
+                .AsNoTracking().ToListAsync();
+            return results;
+        }
+
 
         //  Persistence
 
@@ -356,12 +363,13 @@ namespace WePlayBall.Service
             await _wpbDataContext.SaveChangesAsync();
         }
 
-        public async Task CreateRankSnapShotAsync(Rank rank)
+        public async Task CreateTeamStatAsync(TeamStat stat)
         {
-            _wpbDataContext.Rankings.Add(rank);
+            _wpbDataContext.TeamStats.Add(stat);
             await _wpbDataContext.SaveChangesAsync();
         }
-        
+
+
 
         //  Helpers
 
