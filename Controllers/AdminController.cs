@@ -25,7 +25,8 @@ namespace WePlayBall.Controllers
         public async Task<IActionResult> Index(int? page)
         {
             //await GetFixturesDataAsync();
-            await GetMatchResultsAsync();
+            //await GetMatchResultsAsync();
+            //await GetTeamStatsResultsAsync();
 
             /*var gameResults = await _wpbService.GetGameResultsAsync();
             foreach (var game in gameResults)
@@ -519,49 +520,53 @@ namespace WePlayBall.Controllers
             }
         }
 
-        public async Task GetRankResultsAsync()
+        public async Task GetTeamStatsResultsAsync()
         {
-            //  We're testing here, so we need only the source for the second division  (div2 id: 2)
-            var resultsDataSource = await _wpbService.GetRankDataSource(2);
+            //  Get all the data sources for ranking data
+            var rankingDataSource = await _wpbService.GetRankingDataSources();
 
-            var rankingsResults =
-                ParseDataSource.ParseRankingSource(resultsDataSource, resultsDataSource.ClassNameNode);
-            var timeStamp = DateTime.Now;
-
-            foreach (var result in rankingsResults)
+            foreach (var result in rankingDataSource)
             {
-                try
+                var rankStat = ParseDataSource.ParseRankingSource(result, result.ClassNameNode);
+                foreach (var stat in rankStat)
                 {
-                    var team = await _wpbService.GetTeamByTeamName(result.TeamName);
-                    if (team != null)
+                    try
                     {
-                        var newRanking = new Rank()
+                        var team = await _wpbService.GetTeamByTeamName(stat.TeamName);
+                        if (team != null)
                         {
-                            RankEncoded = EncodeRankSnapshot(team.TeamName, team.SubDivision.SubDivisionCode, timeStamp),
-                            Position = result.Position,
-                            GamesPlayed = result.GamesPlayed,
-                            GamesWon = result.GamesWon,
-                            GamesLost = result.GamesLost,
-                            Points = result.Points,
-                            SubDivisionId = team.SubDivision.Id,
-                            TeamId = team.Id,
-                            TeamName = team.TeamName,
-                            TeamCode = team.TeamCode
-                        };
 
-                        await _wpbService. CreateRankSnapShotAsync(newRanking);
+                            var newStat = new TeamStat()
+                            {
+                                TeamName = team.TeamName,
+                                TeamId = team.Id,
+                                TeamCode = team.TeamCode,
+                                SubDivisionId = team.SubDivisionId,
+                                Position = stat.Position,
+                                GamesPlayed = stat.GamesPlayed,
+                                GamesWon = stat.GamesWon,
+                                GamesLost = stat.GamesLost,
+                                BasketsFor = stat.BasketsFor,
+                                BasketsAganist = stat.BasketsAganist,
+                                PointsDifference = stat.PointsDifference,
+                                Points = stat.Points,
+
+                            };
+                            await _wpbService.CreateTeamStatAsync(newStat);
+                        }
+                        else
+                        {
+                            throw new System.ArgumentException(
+                                "Detected null values in either team variable!");
+                        }
                     }
-                    else
+                    catch (Exception err)
                     {
-                        throw new System.ArgumentException("Detected null values in team variable!");
+                        var msg = err.ToString();
                     }
-                }
-                catch (Exception err)
-                {
-                    var msg = err.ToString();
-                    throw;
                 }
             }
+
         }
 
         public string EncodeGameResult(string homeTeam, string awayTeam, DateTime timestamp)
@@ -569,9 +574,5 @@ namespace WePlayBall.Controllers
             return homeTeam.Trim().ToLower() + "_" + awayTeam.Trim().ToLower() + "_" + timestamp.ToLongDateString();
         }
 
-        public string EncodeRankSnapshot(string teamName, string subDivisionCode, DateTime timeStamp)
-        {
-            return teamName.ToLower() + "_" + subDivisionCode.ToLower() + timeStamp;
-        }
     }
 }

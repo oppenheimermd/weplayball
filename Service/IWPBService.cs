@@ -157,6 +157,12 @@ namespace WePlayBall.Service
         /// <returns></returns>
         PagedResult<Team> GetTeamsBySubDivisionPageable(int? page, int Id);
 
+        /// <summary>
+        /// Get all <see cref="DataSourceRanking"/> entities
+        /// </summary>
+        /// <returns></returns>
+        Task<List<DataSourceRanking>> GetRankingDataSources();
+
         //  Persistence
 
         /// <summary>
@@ -250,11 +256,11 @@ namespace WePlayBall.Service
         Task CreateRankingDataSourceAsync(DataSourceRanking dataSourceRanking);
 
         /// <summary>
-        /// Create an instance of the weekly <see cref="Rank"/> entity
+        /// Create a <see cref="TeamStat"/>
         /// </summary>
-        /// <param name="rank"></param>
+        /// <param name="stat"></param>
         /// <returns></returns>
-        Task CreateRankSnapShotAsync(Rank rank);
+        Task CreateTeamStatAsync(TeamStat stat);
 
         //  Helpers
 

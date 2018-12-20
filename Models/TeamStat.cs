@@ -1,19 +1,21 @@
-﻿using System.Collections.Generic;
+﻿
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 
 namespace WePlayBall.Models
 {
-    public class Team
+    public class TeamStat
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
         [StringLength(200, ErrorMessage = "300 characters maximum")]
         public string TeamName { get; set; }
+
+        [Required]
+        public int TeamId { get; set; }
 
         /// <summary>
         /// Team code for home team
@@ -28,5 +30,31 @@ namespace WePlayBall.Models
         [ForeignKey("SubDivision")]
         public int SubDivisionId { get; set; }
 
+        /// <summary>
+        /// Rank position
+        /// </summary>
+        [Required]
+        public int Position { get; set; }
+
+        [Required]
+        public int GamesPlayed { get; set; }
+
+        [Required]
+        public int GamesWon { get; set; }
+
+        [Required]
+        public int GamesLost { get; set; }
+
+        [Required]
+        public int BasketsFor { get; set; }
+
+        [Required]
+        public int BasketsAganist { get; set; }
+
+        [Required]
+        public int PointsDifference { get; set; }
+
+        [Required]
+        public int Points { get; set; }
     }
 }
