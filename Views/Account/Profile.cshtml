@@ -1,0 +1,23 @@
+﻿
+@model WePlayBall.Models.VM.UserProfileViewModel
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- start: uk-section-default -->
+<div class="uk-section-default" class="uk-section-default uk-section uk-section-xlarge">
+    <div class="uk-container">
+
+        <h2>@ViewData["Title"].</h2>
+        <br/>
+        Image: <img src="@Model.ProfileImage" alt="" class="" />
+        <br />
+        <p>UserId : @Model.UserId</p>
+        <p>Email: @Model.EmailAddress</p>
+        <br />
+        <p>Username: @Model.Username</p>
+
+    </div>
+</div>
+<!-- end: uk-section-default -->

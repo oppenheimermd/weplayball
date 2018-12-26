@@ -111,6 +111,16 @@ namespace WePlayBall.Service
             return team;
         }
 
+        public async Task<List<Team>> GetTeamsAllAsync()
+        {
+            var teams = await _wpbDataContext.Teams
+                .Include(x => x.SubDivision)
+                .ThenInclude(subdivision => subdivision.Division)
+                .AsNoTracking().ToListAsync();
+
+            return teams;
+        }
+
         public async Task<DataSourceFixture> GetFixtureDataSource(int? id)
         {
             var dataSource = await _wpbDataContext.DataSourceFixtures
@@ -227,6 +237,30 @@ namespace WePlayBall.Service
             return results;
         }
 
+        public async Task<User> AuthenticateAsync(string username, string password)
+        {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                return null;
+
+            var user = await _wpbDataContext.Users.FirstOrDefaultAsync(x => x.Username == username);
+
+            // check if username exists
+            if (user == null)
+                return null;
+
+            // check if password is correct
+            return !VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt) ? null : user;
+
+            // authentication successful
+        }
+
+        public async Task<IEnumerable<UserClaim>> GetUserClaimsAsync(Guid userId)
+        {
+            var claims = await _wpbDataContext.UserClaims
+                .Where(x => x.UserId == userId)
+                .AsNoTracking().ToListAsync();
+            return claims;
+        }
 
         //  Persistence
 
@@ -369,7 +403,25 @@ namespace WePlayBall.Service
             await _wpbDataContext.SaveChangesAsync();
         }
 
+        public async Task<User> CreateUserAsync(User user, string password)
+        {
+            byte[] passwordHash, passwordSalt;
+            CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            _wpbDataContext.Users.Add(user);
+            await _wpbDataContext.SaveChangesAsync();
+
+            return user;
+        }
+
+        public async Task AddUserClaimAsync(UserClaim userClaim)
+        {
+            _wpbDataContext.UserClaims.Add(userClaim);
+            await _wpbDataContext.SaveChangesAsync();
+        }
 
         //  Helpers
 
@@ -398,6 +450,39 @@ namespace WePlayBall.Service
         private bool TeamExists(int id)
         {
             return _wpbDataContext.Teams.Any(e => e.Id == id);
+        }
+
+
+        //  See:    https://github.com/cornflourblue/aspnet-core-registration-login-api/blob/master/Services/UserService.cs
+        private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            if (password == null) throw new ArgumentNullException("password");
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
+
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
+        }
+
+        private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
+        {
+            if (password == null) throw new ArgumentNullException("password");
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
+            if (storedHash.Length != 64) throw new ArgumentException("Invalid length of password hash (64 bytes expected).", "passwordHash");
+            if (storedSalt.Length != 128) throw new ArgumentException("Invalid length of password salt (128 bytes expected).", "passwordHash");
+
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                for (int i = 0; i < computedHash.Length; i++)
+                {
+                    if (computedHash[i] != storedHash[i]) return false;
+                }
+            }
+
+            return true;
         }
     }
 }

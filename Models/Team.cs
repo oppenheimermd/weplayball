@@ -12,7 +12,7 @@ namespace WePlayBall.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(200, ErrorMessage = "300 characters maximum")]
+        [StringLength(200, ErrorMessage = "200 characters maximum")]
         public string TeamName { get; set; }
 
         /// <summary>

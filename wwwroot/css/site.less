@@ -17,6 +17,24 @@ p, h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6 {
     Main layout
 */
 
+.tm-header-transparent {
+    position: absolute;
+    z-index: 980;
+    left: 0;
+    right: 0;
+}
+
+.main-page{
+    position: relative;
+}
+
+
+.uk-navbar-container.uk-navbar-sticky {
+    background: #fff;
+    background-color: #fff;
+    box-shadow: 0 1px 10px 0 rgba(0,0,0,.08);
+}
+
 html, body {
     height: 100%;
     font-family: @font-family;
@@ -28,16 +46,20 @@ html, body {
 }
 
 .uk-logo, .uk-logo:hover, .uk-logo:active, .uk-logo:visited {
-    color: #ffffff;
+    color: @std-black;
 }
 
 .uk-navbar-toggle, .uk-navbar-toggle:hover, .uk-navbar-toggle:active, .uk-navbar-toggle:visited {
-    color: #ffffff;
+    color: @std-black;
     padding-top: 2px;
 }
 
-.uk-navbar-container {
-    background-color: #1e87f0 !important;
+.uk-light .uk-navbar-nav > li > a
+{
+    color: @std-black;
+}
+.uk-light .uk-navbar-nav > li.uk-active > a {
+    color: green;
 }
 
 .user > #name {
@@ -56,6 +78,15 @@ html, body {
 .content-background {
     min-height: calc(100% - 80px);
     background-color: #F0F0F0;
+}
+
+/*
+    Sections
+*/
+
+.uk-section-default {
+    background: #fff;
+    background-repeat: no-repeat;
 }
 
 
@@ -142,4 +173,13 @@ html, body {
     .content-padder {
         margin-left: 300px;
     }
+}
+
+/*
+    buttons
+*/
+.custom_button {
+    border-radius: 500px;
+    padding: 0 38px;
+    letter-spacing: .5px;
 }
