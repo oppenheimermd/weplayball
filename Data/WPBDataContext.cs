@@ -30,9 +30,20 @@ namespace WePlayBall.Data
             modelBuilder.Entity<TeamStat>().ToTable("TeamStat");
             modelBuilder.Entity<SubDivision>().ToTable("SubDivision");
             modelBuilder.Entity<Team>().ToTable("Team");
+            modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<UserClaim>().ToTable("UserClaim");
 
             modelBuilder.Entity<Team>()
                 .HasIndex(x => x.TeamCode)
+                .IsUnique();
+
+
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.Email)
+                .IsUnique();
+            
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.Username)
                 .IsUnique();
         }
 
@@ -46,5 +57,7 @@ namespace WePlayBall.Data
         public DbSet<TeamStat> TeamStats { get; set; }
         public DbSet<SubDivision> SubDivisions { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserClaim> UserClaims { get; set; }
     }
 }

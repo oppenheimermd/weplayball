@@ -76,6 +76,12 @@ namespace WePlayBall.Service
         Task<Team> GetTeamByTeamName(string teamName);
 
         /// <summary>
+        /// Get all <see cref="Team"/>(s) by team name query.  Includes <see cref="Division"/> and <see cref="SubDivision"/>
+        /// </summary>
+        /// <returns></returns>
+        Task<List<Team>> GetTeamsAllAsync();
+
+        /// <summary>
         /// Get a <see cref="DataSourceFixture"/> entity
         /// </summary>
         /// <param name="id"></param>
@@ -162,6 +168,21 @@ namespace WePlayBall.Service
         /// </summary>
         /// <returns></returns>
         Task<List<DataSourceRanking>> GetRankingDataSources();
+
+        /// <summary>
+        /// Authenticate a <see cref="User"/>
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        Task<User> AuthenticateAsync(string username, string password);
+
+        /// <summary>
+        /// Get all <see cref="UserClaim"/> for user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<IEnumerable<UserClaim>> GetUserClaimsAsync(Guid userId);
 
         //  Persistence
 
@@ -261,6 +282,21 @@ namespace WePlayBall.Service
         /// <param name="stat"></param>
         /// <returns></returns>
         Task CreateTeamStatAsync(TeamStat stat);
+
+        /// <summary>
+        /// Create a <see cref="User"/>
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        Task<User> CreateUserAsync(User user, string password);
+
+        /// <summary>
+        /// Create a <see cref="UserClaim"/> for <see cref="User"/>
+        /// </summary>
+        /// <param name="userClaim"></param>
+        /// <returns></returns>
+        Task AddUserClaimAsync(UserClaim userClaim);
 
         //  Helpers
 

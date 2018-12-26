@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewData["Title"] = "Claims";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- start: uk-section-default -->
+<div class="uk-section-default">
+    <!-- start: uk-container -->
+    <div class="uk-container">
+        <!-- start: uk-margin-xlarge uk-container -->
+        <div class="uk-margin-xlarge uk-container">
+            <div class="uk-grid-stack" uk-grid>
+                <div class="uk-width-1-1@m">
+                    <h2 class="uk-width-xxlarge uk-margin-auto uk-text-center uk-h1">
+                        Claims associated with current User
+                    </h2>
+                    <p>
+                        This page displays all the claims associated the the current User. This is useful when debugging 
+                        to see which claims are being populated from the Auth0 ID Token.
+                    </p>
+                </div>
+            </div>
+
+            <table class="uk-table uk-table-divide uk-table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        Claim
+                    </th>
+                    <th>
+                        Value
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var claim in User.Claims)
+                {
+                    <tr>
+                        <td>@claim.Type</td>
+                        <td>@claim.Value</td>
+                    </tr>
+                }
+                </tbody>
+            </table>            
+
+        </div>
+        <!-- start: uk-margin-xlarge uk-container -->
+    </div>
+    <!-- start: uk-container -->
+</div>
+<!-- start: uk-section-default -->
+

@@ -24,6 +24,20 @@ h6,
 /*
     Main layout
 */
+.tm-header-transparent {
+  position: absolute;
+  z-index: 980;
+  left: 0;
+  right: 0;
+}
+.main-page {
+  position: relative;
+}
+.uk-navbar-container.uk-navbar-sticky {
+  background: #fff;
+  background-color: #fff;
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.08);
+}
 html,
 body {
   height: 100%;
@@ -37,17 +51,20 @@ body {
 .uk-logo:hover,
 .uk-logo:active,
 .uk-logo:visited {
-  color: #ffffff;
+  color: #101820;
 }
 .uk-navbar-toggle,
 .uk-navbar-toggle:hover,
 .uk-navbar-toggle:active,
 .uk-navbar-toggle:visited {
-  color: #ffffff;
+  color: #101820;
   padding-top: 2px;
 }
-.uk-navbar-container {
-  background-color: #1e87f0 !important;
+.uk-light .uk-navbar-nav > li > a {
+  color: #101820;
+}
+.uk-light .uk-navbar-nav > li.uk-active > a {
+  color: green;
 }
 .user > #name {
   font-size: 22px;
@@ -62,6 +79,13 @@ body {
 .content-background {
   min-height: calc(100% - 80px);
   background-color: #F0F0F0;
+}
+/*
+    Sections
+*/
+.uk-section-default {
+  background: #fff;
+  background-repeat: no-repeat;
 }
 /*
     Sidebar
@@ -132,4 +156,12 @@ body {
   .content-padder {
     margin-left: 300px;
   }
+}
+/*
+    buttons
+*/
+.custom_button {
+  border-radius: 500px;
+  padding: 0 38px;
+  letter-spacing: 0.5px;
 }

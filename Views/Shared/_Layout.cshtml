@@ -6,65 +6,196 @@
     <title>@ViewData["Title"] - weplayball</title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="/lib/uikit-3.0.0-rc.25/css/uikit.css" />
+        <link href="/css/site.css" rel="stylesheet" asp-append-version="true" type="text/css" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/uikit-3.0.0-rc.25/css/uikit.min.css"
+              asp-fallback-href="~/lib/uikit-3.0.0-rc.23/css/uikit.min.css"
+              asp-fallback-test-class="hidden"
+              asp-fallback-test-property="visibility"
+              asp-fallback-test-value="hidden" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">weplayball</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                </ul>
+
+    <!-- start: center-content -->
+    <div class="main-page">
+        <!-- start: uk-hidden@m -->
+        <div class="uk-hidden@m">
+            <nav uk-navbar>
+                <!-- end: uk-navbar-left -->
+                <div class="uk-navbar-left">
+                    <a class="uk-navbar-toggle" href="#tm-mobile" uk-toggle="">
+                        <div uk-navbar-toggle-icon="" class="uk-navbar-toggle-icon uk-icon">
+                        </div>
+                    </a>
+                </div>
+                <!-- end: uk-navbar-left -->
+                <!-- end: uk-navbar-center -->
+                <div class="uk-navbar-center">
+                    <a class="uk-navbar-item uk-logo" href="https://demo.yootheme.com/themes/joomla/2018/flow">
+                        <img src="/themes/joomla/2018/flow/images/yootheme/logo-mobile.svg" alt="Flow">
+                    </a>
+                </div>
+
+            </nav>
+        </div>
+        <!-- end: uk-hidden@m -->
+
+        <!-- start: tm-header uk-visible@m tm-header-transparent -->
+        <div class="uk-visible@m tm-header-transparent" uk-header>
+            <div uk-sticky="cls-active:uk-navbar-sticky;sel-target:.uk-navbar-container;" media="@@m">
+                <!-- start: uk-navbar-container uk-navbar-transparent uk-light -->
+                <div class="uk-navbar-container uk-navbar-transparent uk-light">
+                    <div class="uk-container">
+                        <nav uk-navbar="align:center;boundry:.uk-navbar-container;" class="uk-navbar-transparent">
+                            <!-- start: uk-navbar-left -->
+                            <div class="uk-navbar-left">
+                                <a href="#" class="uk-navbar-item uk-logo">
+                                    <img src="~/images/assets/logo.svg" alt="Flow">
+                                    <img src="~/images/assets/logo-inverse.svg" class="uk-logo-inverse" alt="Flow">
+                                </a>
+                            </div>
+                            <!-- start: uk-navbar-left -->
+                            <div class="uk-navbar-right">
+                                <ul class="uk-navbar-nav">
+                                    <li>
+                                        <a asp-controller="Home" asp-action="Index">
+                                            Home
+                                        </a>
+                                    </li>
+                                    <li><a href="#">Features</a></li>
+                                    <li><a href="#">Company</a></li>
+                                </ul>
+                                <div class="uk-navbar-item" id="module-94">
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <li><a asp-controller="Account" asp-action="Profile">Hello @User.Identity.Name!</a></li>
+                                        <div class="custom">
+                                            <a asp-controller="Account" asp-action="Logout" class="uk-button uk-button-primary custom_button">
+                                                Logout
+                                            </a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="custom">
+                                            <a asp-controller="Account" asp-action="Login" class="uk-button uk-button-primary custom_button">
+                                                Login
+                                            </a>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+                <!-- end: uk-navbar-container uk-navbar-transparent uk-light -->
             </div>
         </div>
-    </nav>
+        <!-- end: uk-visible@m uk-navbar-transparent -->
 
-    <partial name="_CookieConsentPartial" />
-
-    <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2018 - weplayball</p>
-        </footer>
+        <partial name="_CookieConsentPartial" />
+
+        <!-- start: uk-section-default uk-section -->
+        <div class="uk-section-default uk-section">
+            <!-- start: uk-container -->
+            <div class="uk-container">
+                <!-- start: uk-margin-large uk-grid-stack -->
+                <div class="uk-margin-large uk-grid-stack" uk-grid>
+                    <div class="uk-width-1-1@m uk-grid-item-match">
+                        <!-- start: uk-tile-primary uk-tile uk-tile-small -->
+                        <div class="uk-tile-primary uk-tile uk-tile-small">
+                            <div>
+                                <form class="uk-form uk-panel js-form-newsletter" method="post" action="#">
+                                    <div class="uk-grid-small uk-child-width-expand@s" uk-grid="">
+                                        <div class="uk-first-column">
+                                            <input class="el-input uk-input uk-form-large uk-form-blank" type="email" name="email" placeholder="Sign up for Newsletter" required="">
+                                        </div>
+                                        <div class="uk-width-auto@s">
+                                            <button class="el-button uk-button uk-button-default uk-button-large" type="submit">Send</button>
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" name="settings" value="">
+                                    <div class="message uk-margin uk-hidden"></div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- end: uk-tile-primary uk-tile uk-tile-small -->
+                    </div>
+                </div>
+                <!-- end: uk-margin-large uk-grid-stack -->
+                <!-- start: uk-margin-xlarge -->
+                <div class="uk-margin-xlarge" uk-grid>
+                    <div class="uk-width-expand@m uk-width-1-2@s">
+                        <h4 class="uk-margin-medium uk-text-left@s uk-text-center">
+                            Product
+                        </h4>
+                        <ul class="uk-text-left@s uk-text-center uk-list">
+                            <li class="el-item">
+                                <div class="el-content uk-h6"><a class="el-link uk-link-muted" href="#">Pricing</a></div>
+                            </li>
+                            <li class="el-item">
+                                <div class="el-content uk-h6"><a class="el-link uk-link-muted" href="#">Features</a></div>
+                            </li>
+                            <li class="el-item">
+                                <div class="el-content uk-h6"><a class="el-link uk-link-muted" href="#">Extensions</a></div>
+                            </li>
+                            <li class="el-item">
+                                <div class="el-content uk-h6"><a class="el-link uk-link-muted" href="#">Plugins</a></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="uk-width-expand@m uk-width-1-2@s">
+                        <h4 class="uk-text-left@s uk-text-center">
+                            Crossover Platform
+                        </h4>
+                        <div class="uk-margin uk-text-left@s uk-text-center">
+                            <img class="el-image" alt="" data-src="../images/assets/footer-logos.svg" uk-img="">
+                        </div>
+                    </div>
+                </div>
+                <!-- end: uk-margin-xlarge -->
+
+            </div>
+            <!-- end: uk-container -->
+        </div>
+        <!-- end: uk-section-default uk-section -->
     </div>
+    <!-- end: center-content -->
+
+
+
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/lib/uikit-3.0.0-rc.25/js/uikit.js" asp-append-version="true"></script>
+        <script src="~/lib/uikit-3.0.0-rc.25/js/uikit-icons.min.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery"
                 crossorigin="anonymous"
-                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+                integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f">
         </script>
-        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.23/js/uikit.min.js"
+                asp-fallback-src="~/lib/uikit-3.0.0-rc.23/js/uikit.min.js"
+                asp-fallback-test="window.jQuery"
                 crossorigin="anonymous"
-                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+                integrity="sha384-tUE1Rx1+VVmyonEGjovtJHxnHpajQhu/bEWvUWZwWxkSSIPSFkCVHfjbZO5A5dAl">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.23/js/uikit-icons.min.js"
+                asp-fallback-src="~/lib/uikit-3.0.0-rc.23/js/uikit-icons.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-rykS0p0esz/OpEnM+QEcTnvBd+gcAUcRXloTdutcuIWBhaNvc5npuobC33qQvYW0">
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
