@@ -1,7 +1,7 @@
 ﻿/*
     Variables
 */
-@font-family: 'Open Sans', sans-serif;
+@font-family: 'Lato', sans-serif;
 @std-black: #101820;
 
 /*
@@ -13,10 +13,20 @@ p, h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6 {
     font-family: @font-family;
 }
 
+.uk-heading-hero {
+    font-weight: 100 !important;
+    color: @std-black !important;
+    text-transform: uppercase;
+}
+
+.uk-text-background {
+    background-color: @std-black;
+}
+
+
 /*
     Main layout
 */
-
 .tm-header-transparent {
     position: absolute;
     z-index: 980;
@@ -87,6 +97,12 @@ html, body {
 .uk-section-default {
     background: #fff;
     background-repeat: no-repeat;
+}
+
+.uk-section-lines {
+    background: #fff;
+    background-image: url(../images/assets/section-background-image-lines.svg);
+    background-position-x: 50%;
 }
 
 

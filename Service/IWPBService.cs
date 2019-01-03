@@ -76,10 +76,10 @@ namespace WePlayBall.Service
         Task<Team> GetTeamByTeamName(string teamName);
 
         /// <summary>
-        /// Get all <see cref="Team"/>(s) by team name query.  Includes <see cref="Division"/> and <see cref="SubDivision"/>
+        /// Get all <see cref="TeamDto"/>(s) by team name query.  Includes <see cref="Division"/> and <see cref="SubDivision"/>
         /// </summary>
         /// <returns></returns>
-        Task<List<Team>> GetTeamsAllAsync();
+        Task<List<TeamDto>> GetTeamsAllAsync();
 
         /// <summary>
         /// Get a <see cref="DataSourceFixture"/> entity
