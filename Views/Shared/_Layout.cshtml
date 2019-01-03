@@ -1,4 +1,25 @@
-﻿<!DOCTYPE html>
+﻿<!-- Global site tag (gtag.js) - Google Analytics -->
+<script type='text/javascript'>
+    //<![CDATA[
+    /*  see: https://www.bloggertipandtrick.net/load-google-fonts-without-render-blocking-css/ */
+    WebFontConfig = {
+        google: {
+            families: ['Lato:100,300,70']
+        }
+    };
+
+    (function(d) {
+        var wf = d.createElement('script'),
+            s = d.scripts[0];
+        wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js';
+        wf.async = true;
+        s.parentNode.insertBefore(wf, s);
+    })(document);
+
+//]]>
+</script>
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -10,7 +31,7 @@
         <link href="/css/site.css" rel="stylesheet" asp-append-version="true" type="text/css" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/uikit-3.0.0-rc.25/css/uikit.min.css"
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.25/css/uikit.min.css"
               asp-fallback-href="~/lib/uikit-3.0.0-rc.23/css/uikit.min.css"
               asp-fallback-test-class="hidden"
               asp-fallback-test-property="visibility"
@@ -24,28 +45,29 @@
     <div class="main-page">
         <!-- start: uk-hidden@m -->
         <div class="uk-hidden@m">
-            <nav uk-navbar>
-                <!-- end: uk-navbar-left -->
+            <!-- start: uk-navbar-container -->
+            <nav class="uk-navbar-container" uk-navbar>
+                <!-- start: uk-navbar-left -->
                 <div class="uk-navbar-left">
+                    <a class="uk-navbar-item uk-logo" href="#">
+                        <img src="~/images/assets/logo-mobile.svg" alt="WePlayBall">
+                    </a>
+                </div>
+                <!-- end: uk-navbar-left -->
+                <!-- start: uk-navbar-right -->
+                <div class="uk-navbar-right">
                     <a class="uk-navbar-toggle" href="#tm-mobile" uk-toggle="">
                         <div uk-navbar-toggle-icon="" class="uk-navbar-toggle-icon uk-icon">
                         </div>
                     </a>
                 </div>
-                <!-- end: uk-navbar-left -->
-                <!-- end: uk-navbar-center -->
-                <div class="uk-navbar-center">
-                    <a class="uk-navbar-item uk-logo" href="https://demo.yootheme.com/themes/joomla/2018/flow">
-                        <img src="/themes/joomla/2018/flow/images/yootheme/logo-mobile.svg" alt="Flow">
-                    </a>
-                </div>
-
+                <!-- end: uk-navbar-right -->
             </nav>
+            <!-- end: uk-navbar-container -->
         </div>
         <!-- end: uk-hidden@m -->
-
         <!-- start: tm-header uk-visible@m tm-header-transparent -->
-        <div class="uk-visible@m tm-header-transparent" uk-header>
+        <div class="tm-header uk-visible@m tm-header-transparent">
             <div uk-sticky="cls-active:uk-navbar-sticky;sel-target:.uk-navbar-container;" media="@@m">
                 <!-- start: uk-navbar-container uk-navbar-transparent uk-light -->
                 <div class="uk-navbar-container uk-navbar-transparent uk-light">
@@ -96,7 +118,10 @@
                 <!-- end: uk-navbar-container uk-navbar-transparent uk-light -->
             </div>
         </div>
-        <!-- end: uk-visible@m uk-navbar-transparent -->
+        <!-- end: tm-header uk-visible@m tm-header-transparent -->
+        
+        
+       
 
         @RenderBody()
         <partial name="_CookieConsentPartial" />

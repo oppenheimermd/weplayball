@@ -111,11 +111,12 @@ namespace WePlayBall.Service
             return team;
         }
 
-        public async Task<List<Team>> GetTeamsAllAsync()
+        public async Task<List<TeamDto>> GetTeamsAllAsync()
         {
             var teams = await _wpbDataContext.Teams
                 .Include(x => x.SubDivision)
                 .ThenInclude(subdivision => subdivision.Division)
+                .Select(ModelHelpers.AsTeamDto)
                 .AsNoTracking().ToListAsync();
 
             return teams;

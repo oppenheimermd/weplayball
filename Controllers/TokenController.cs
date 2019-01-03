@@ -116,7 +116,7 @@ namespace WePlayBall.Controllers
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
                 _config["Jwt:Issuer"],
                 claims.ToArray(),
-                expires: DateTime.UtcNow.AddDays(7),
+                expires: DateTime.UtcNow.AddMonths(12),// set expiry a year from now
                 signingCredentials: creds);
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);

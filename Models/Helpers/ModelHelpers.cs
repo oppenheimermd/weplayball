@@ -6,6 +6,20 @@ namespace WePlayBall.Models.Helpers
 {
     public static class ModelHelpers
     {
+        /// <summary>
+        /// From <see cref="Team"/> to <see cref="TeamDto"/>
+        /// </summary>
+        public static readonly Expression<Func<Team, TeamDto>> AsTeamDto =
+            x => new TeamDto
+            {
+                TeamName = x.TeamName,
+                TeamCode = x.TeamCode,
+                DivisionName = x.SubDivision.Division.DivisionName,
+                DivisionCode = x.SubDivision.Division.DivisionCode,
+                SubDivisionTitle = x.SubDivision.SubDivisionTitle,
+                SubDivisionCode = x.SubDivision.SubDivisionCode
+            };
+
         // Typed lambda expression for Select() method. 
         public static readonly Expression<Func<Division, DivisonDto>> AsDivisionDto =
             x => new DivisonDto

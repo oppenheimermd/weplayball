@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WePlayBall.Authorization;
 using WePlayBall.Models;
+using WePlayBall.Models.DTO;
 using WePlayBall.Service;
 using WePlayBall.Settings;
 
@@ -32,7 +33,7 @@ namespace WePlayBall.Controllers
         // GET: api/Teams
         [Authorize(Policy = WpbPolicy.PolicyReadTeamData)]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
+        public async Task<ActionResult<IEnumerable<TeamDto>>> GetTeams()
         {
             return await _wpbService.GetTeamsAllAsync();
         }
