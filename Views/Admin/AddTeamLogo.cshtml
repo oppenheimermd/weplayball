@@ -1,0 +1,44 @@
+﻿@model WePlayBall.Models.Team
+@{
+    ViewData["Title"] = "AddTeamLogo";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>AddTeamLogo</h2>
+
+@section DefaultHeader{
+    <ul class="uk-breadcrumb">
+        <li>
+            <a asp-controller="Admin" asp-action="Index">All</a>
+        </li>
+        <li>
+            <span href="">Add Team Logo</span>
+        </li>
+    </ul>
+}
+
+<form asp-action="AddTeamLogo" enctype="multipart/form-data">
+    <fieldset class="uk-fieldset">
+        <legend class="uk-legend">Edit team</legend>
+        <div asp-validation-summary="ModelOnly" class="uk-form-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <div class="uk-margin">
+            <div uk-form-custom="target: true">
+                <input type="file" name="LogoImage" id="BurgerImage">
+                <input class="uk-input" type="text" placeholder="Select file" disabled>
+            </div>
+        </div>
+        
+        <div class="uk-margin">
+            <input type="submit" value="Update" class="uk-button uk-button-primary" />
+        </div>
+
+    </fieldset>
+</form>
+
+<div>
+    <a asp-controller="Admin" asp-action="TeamsAll">Back to List</a>
+</div>
+
+

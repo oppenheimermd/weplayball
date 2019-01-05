@@ -23,8 +23,6 @@ namespace WePlayBall.Controllers
 
         public async Task<IActionResult> Index()
         {
-
-
             return View();
         }
 
@@ -164,6 +162,18 @@ namespace WePlayBall.Controllers
                 }
             }
         }
+
+        /*public async Task UpdateTeam()
+        {
+            var teams = await _wpbService.GetTeamsAllAdminAsync();
+
+            foreach (var team in teams)
+            {
+                team.HasLogo = false;
+                await _wpbService.UpdateTeamAsync(team);
+            }
+
+        }*/
 
         public async Task AddDataSourceRankingAsync()
         {

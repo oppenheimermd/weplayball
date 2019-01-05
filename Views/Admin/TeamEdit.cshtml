@@ -37,6 +37,25 @@
         </div>
 
         <div class="uk-margin">
+            <input asp-for="Address" class="uk-input" placeholder="Team Address" />
+            <span asp-validation-for="Address" class="uk-form-danger"></span>
+        </div>
+        
+        <div class="uk-margin">
+            <input asp-for="PostCode" class="uk-input" placeholder="PostCode" />
+            <span asp-validation-for="PostCode" class="uk-form-danger"></span>
+        </div>
+        
+        <div class="uk-margin">
+            <input asp-for="Website" class="uk-input" placeholder="Website" />
+            <span asp-validation-for="Website" class="uk-form-danger"></span>
+        </div>
+        
+        <div class="uk-margin">
+            <a asp-action="AddTeamLogo" asp-controller="Admin" asp-route-id="@Model.Id">Edit Logo</a>
+        </div>
+
+        <div class="uk-margin">
             <input type="submit" value="Update" class="uk-button uk-button-primary" />
         </div>
 

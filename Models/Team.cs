@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.Serialization;
 
 namespace WePlayBall.Models
 {
     public class Team
     {
+        public Team()
+        {
+            this.HasLogo = false;
+        }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -27,6 +29,23 @@ namespace WePlayBall.Models
         [Required]
         [ForeignKey("SubDivision")]
         public int SubDivisionId { get; set; }
+
+        [StringLength(256, ErrorMessage = "256 characters maximum")]
+        public string Website { get; set; }
+
+        [StringLength(200, ErrorMessage = "200 characters maximum")]
+        public string Address { get; set; }
+
+        public string PostCode { get; set; }
+
+        public bool HasLogo { get; set; }
+
+        public  string Logo { get; set; }
+
+        public string LogolUrl()
+        {
+            return $"/TeamLogos/{Logo}";
+        }
 
     }
 }
