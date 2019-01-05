@@ -20,15 +20,29 @@ namespace WePlayBall.Models.Helpers
                 SubDivisionCode = x.SubDivision.SubDivisionCode
             };
 
+        public static readonly Expression<Func<Fixture, FixturesDto>> AsFixtureDto =
+            x => new FixturesDto()
+            {
+                FixtureDate = x.FixtureDate,
+                HomeTeamName = x.HomeTeamName,
+                HomeTeamCode = x.HomeTeamCode,
+                AwayTeamName = x.AwayTeamName,
+                AwayTeamCode = x.AwayTeamCode,
+                Division = x.SubDivision.Division.DivisionName,
+                DivisionCode = x.SubDivision.Division.DivisionCode,
+                SubDivision = x.SubDivision.SubDivisionTitle,
+                SubDivisionCode = x.SubDivision.SubDivisionCode
+            };
+
         // Typed lambda expression for Select() method. 
-        public static readonly Expression<Func<Division, DivisonDto>> AsDivisionDto =
+        /*public static readonly Expression<Func<Division, DivisonDto>> AsDivisionDto =
             x => new DivisonDto
             {
                 DivisionName = x.DivisionName,
                 DivisionCode = x.DivisionCode
             };
 
-        /*public static readonly Expression<Func<GameResult, GameResultDto>> AsGameResultDto =
+        public static readonly Expression<Func<GameResult, GameResultDto>> AsGameResultDto =
             x => new GameResultDto
             {
                 TimeStamp = x.TimeStamp,

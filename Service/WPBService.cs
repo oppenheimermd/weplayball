@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using ImageMagick;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore.Internal;
 using WePlayBall.Data;
-using WePlayBall.Helpers;
 using WePlayBall.Models;
 using WePlayBall.Models.DTO;
 using WePlayBall.Models.Helpers;
@@ -17,11 +21,15 @@ namespace WePlayBall.Service
     {
         private readonly WPBDataContext _wpbDataContext;
         private readonly SiteConfig _siteSettings;
+        private readonly string _logoFolder;
+        private readonly int _logoSize;
 
-        public WPBService(WPBDataContext wpbDataContext, SiteConfig siteSettings)
+        public WPBService(WPBDataContext wpbDataContext, SiteConfig siteSettings, IHostingEnvironment env)
         {
             _wpbDataContext = wpbDataContext;
             _siteSettings = siteSettings;
+            _logoFolder = Path.Combine(env.WebRootPath, "teamLogos");
+            _logoSize = 100;
         }
 
         //  Queries
@@ -111,12 +119,33 @@ namespace WePlayBall.Service
             return team;
         }
 
+        public async Task<Team> GetTeamByTeamCode(string teamCode)
+        {
+            var team = await _wpbDataContext.Teams
+                .Include(x => x.SubDivision)
+                .ThenInclude(subdivision => subdivision.Division)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.TeamCode == teamCode);
+
+            return team;
+        }
+
         public async Task<List<TeamDto>> GetTeamsAllAsync()
         {
             var teams = await _wpbDataContext.Teams
                 .Include(x => x.SubDivision)
                 .ThenInclude(subdivision => subdivision.Division)
                 .Select(ModelHelpers.AsTeamDto)
+                .AsNoTracking().ToListAsync();
+
+            return teams;
+        }
+
+        public async Task<List<Team>> GetTeamsAllAdminAsync()
+        {
+            var teams = await _wpbDataContext.Teams
+                .Include(x => x.SubDivision)
+                .ThenInclude(subdivision => subdivision.Division)
                 .AsNoTracking().ToListAsync();
 
             return teams;
@@ -152,6 +181,70 @@ namespace WePlayBall.Service
                 .AsNoTracking().ToListAsync();
             return fixtures;
         }
+
+        /*public async Task<IEnumerable<FixturesDto>> GetFixturesAsDtoAsync()
+        {
+            var timeStampNow = DateTime.Now;
+
+            var fixtures = await _wpbDataContext.Fixtures
+                .Where( x => x.FixtureDate >= timeStampNow)
+                .Include(x => x.SubDivision)
+                .ThenInclude(subdivision => subdivision.Division)
+                .Select(ModelHelpers.AsFixtureDto)
+                .AsNoTracking().ToListAsync();
+
+            return fixtures;
+        }*/
+
+        public List<FixturesDto> GetFixturesAsDtoAsync()
+        {
+            var timestampNow = DateTime.Now;
+            var timestampSeven = timestampNow.AddDays(7);
+
+            var query = (from f in _wpbDataContext.Fixtures
+                where f.FixtureDate >= timestampNow && f.FixtureDate <= timestampSeven
+                join homeTeam in _wpbDataContext.Teams on f.HomeTeamId equals homeTeam.Id
+                join awayTeam in _wpbDataContext.Teams on f.AwayTeamId equals awayTeam.Id
+                join subDiv in _wpbDataContext.SubDivisions on f.SubDivisionId equals subDiv.Id
+                join div in _wpbDataContext.Divisions on subDiv.DivisionId equals div.Id
+                select new FixturesDto
+                {
+                    FixtureDate = f.FixtureDate,
+                    HomeTeamName = homeTeam.TeamName,
+                    HomeTeamCode = homeTeam.TeamCode,
+                    HomeTeamHasLogo = homeTeam.HasLogo,
+                    HomeTeamLogo = FixturesDto.GetLogolUrl(homeTeam.Logo),
+                    AwayTeamName = awayTeam.TeamName,
+                    AwayTeamCode = awayTeam.TeamCode,
+                    AwayTeamHasLogo = awayTeam.HasLogo,
+                    AwayTeamLogo = FixturesDto.GetLogolUrl(awayTeam.Logo),
+                    Division = div.DivisionName,
+                    DivisionCode = div.DivisionCode,
+                    SubDivision = subDiv.SubDivisionTitle,
+                    SubDivisionCode = subDiv.SubDivisionCode
+                });
+
+            return query.ToList();
+        }
+
+        public async Task<IEnumerable<FixturesDto>> AddTeamLogosAsync(IEnumerable<FixturesDto> fixturesDtosAsList)
+        {
+            var addTeamLogo = fixturesDtosAsList as FixturesDto[] ?? fixturesDtosAsList.ToArray();
+            foreach (var team in addTeamLogo)
+            {
+                var homeTeam = await GetTeamByTeamCode(team.HomeTeamCode);
+                var awayTeam = await GetTeamByTeamCode(team.AwayTeamCode);
+
+                team.HomeTeamLogo = homeTeam.Logo;
+                team.HomeTeamHasLogo = homeTeam.HasLogo;
+                team.AwayTeamLogo = awayTeam.Logo;
+                team.AwayTeamHasLogo = awayTeam.HasLogo;
+
+            }
+
+            return addTeamLogo;
+        }
+
 
 
         public PagedResult<Fixture> GetFixturePageable(int? page)
@@ -422,6 +515,45 @@ namespace WePlayBall.Service
         {
             _wpbDataContext.UserClaims.Add(userClaim);
             await _wpbDataContext.SaveChangesAsync();
+        }
+
+        public async Task<string> SaveTeamLogoAsync(IFormFile teamLogo, string newFilename)
+        {
+            var imageFilename = "";
+
+            using (var ms = new MemoryStream())
+            {
+                teamLogo.CopyTo(ms);
+                var fileBytes = ms.ToArray();
+                imageFilename = await SaveTeamLogoFileAsync(fileBytes, teamLogo.FileName, newFilename).ConfigureAwait(true);
+            }
+
+            return imageFilename;
+        }
+
+        private async Task<string> SaveTeamLogoFileAsync(byte[] bytes, string fileName, string newFileName)
+        {
+            return await Task.Run<string>(() =>
+            {
+                //var newFileName = DateTime.UtcNow.Ticks.ToString();
+
+                var ext = Path.GetExtension(fileName);
+
+                var relative = $"{newFileName}{ext}";
+                var absolute = Path.Combine(_logoFolder, relative);
+                var dir = Path.GetDirectoryName(absolute);
+
+                Directory.CreateDirectory(dir);
+                using (var image = new MagickImage(bytes))
+                {
+                    //  set just the width to maintain aspect ratio
+                    image.Resize(_logoSize, 0);
+                    image.Write(absolute);
+                }
+
+                //  add additional pictures
+                return  newFileName + ext;
+            });
         }
 
         //  Helpers

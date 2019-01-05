@@ -17,17 +17,17 @@ h5,
 .uk-h5,
 h6,
 .uk-h6 {
-  color: #101820 !important;
+  color: #101017 !important;
   font-weight: 100 !important;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 .uk-heading-hero {
   font-weight: 100 !important;
-  color: #101820 !important;
+  color: #101017 !important;
   text-transform: uppercase;
 }
 .uk-text-background {
-  background-color: #101820;
+  background-color: #101017;
 }
 /*
     Main layout
@@ -49,7 +49,7 @@ h6,
 html,
 body {
   height: 100%;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 .full-width-center {
   display: block;
@@ -59,17 +59,17 @@ body {
 .uk-logo:hover,
 .uk-logo:active,
 .uk-logo:visited {
-  color: #101820;
+  color: #101017;
 }
 .uk-navbar-toggle,
 .uk-navbar-toggle:hover,
 .uk-navbar-toggle:active,
 .uk-navbar-toggle:visited {
-  color: #101820;
+  color: #101017;
   padding-top: 2px;
 }
 .uk-light .uk-navbar-nav > li > a {
-  color: #101820;
+  color: #101017;
 }
 .uk-light .uk-navbar-nav > li.uk-active > a {
   color: green;

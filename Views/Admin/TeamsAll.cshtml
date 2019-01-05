@@ -30,10 +30,10 @@
                 Team Code
             </th>
             <th>
-                Subdivision Code
+                Division Code
             </th>
             <th>
-                Division Code
+                Logo
             </th>
             <th></th>
         </tr>
@@ -52,11 +52,22 @@
                 @Html.DisplayFor(modelItem => item.TeamCode)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SubDivision.SubDivisionCode)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.SubDivision.Division.DivisionCode)
             </td>
+            @{
+                if (item.HasLogo)
+                {
+                    <td>
+                        <img src="@item.LogolUrl()" width="50" />
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <h4>@item.TeamCode.ToUpperInvariant()</h4>
+                    </td>
+                }
+            }
             <td>
                 <a asp-action="TeamEdit" asp-controller="Admin" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="TeamDetails" asp-controller="Admin" asp-route-id="@item.Id">Details</a> |

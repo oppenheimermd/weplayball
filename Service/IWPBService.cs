@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using WePlayBall.Data;
 using WePlayBall.Models;
 using WePlayBall.Models.DTO;
@@ -76,10 +77,23 @@ namespace WePlayBall.Service
         Task<Team> GetTeamByTeamName(string teamName);
 
         /// <summary>
+        /// Get a <see cref="Team"/> by team code query.  Includes <see cref="Division"/> and <see cref="SubDivision"/>
+        /// </summary>
+        /// <param name="teamCode"></param>
+        /// <returns></returns>
+        Task<Team> GetTeamByTeamCode(string teamCode);
+
+        /// <summary>
         /// Get all <see cref="TeamDto"/>(s) by team name query.  Includes <see cref="Division"/> and <see cref="SubDivision"/>
         /// </summary>
         /// <returns></returns>
         Task<List<TeamDto>> GetTeamsAllAsync();
+
+        /// <summary>
+        /// Get all <see cref="Team"/>(s) for admin use.  Includes <see cref="Division"/> and <see cref="SubDivision"/>
+        /// </summary>
+        /// <returns></returns>
+        Task<List<Team>> GetTeamsAllAdminAsync();
 
         /// <summary>
         /// Get a <see cref="DataSourceFixture"/> entity
@@ -106,6 +120,20 @@ namespace WePlayBall.Service
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<Fixture>> GetFixturesAsync();
+
+        /// <summary>
+        /// Get all upcoming <see cref="Fixture"/> as Dto.
+        /// </summary>
+        /// <returns></returns>
+        //Task<IEnumerable<FixturesDto>> GetFixturesAsDtoAsync();
+        List<FixturesDto> GetFixturesAsDtoAsync();
+
+        /// <summary>
+        /// Add team logos to <see cref="FixturesDto"/> request
+        /// </summary>
+        /// <param name="fixturesDtosAsList"></param>
+        /// <returns></returns>
+        Task<IEnumerable<FixturesDto>> AddTeamLogosAsync(IEnumerable<FixturesDto> fixturesDtosAsList);
 
         /// <summary>
         /// Get <see cref="Fixture"/>(s) as pageable.  Includes <see cref="Division"/> and <see cref="SubDivision"/>
@@ -297,6 +325,14 @@ namespace WePlayBall.Service
         /// <param name="userClaim"></param>
         /// <returns></returns>
         Task AddUserClaimAsync(UserClaim userClaim);
+
+        /// <summary>
+        /// Create and resize a <see cref="Team"/>(s) logo
+        /// </summary>
+        /// <param name="teamLogo"></param>
+        /// <param name="newFilename"></param>
+        /// <returns></returns>
+        Task<string> SaveTeamLogoAsync(IFormFile teamLogo, string newFilename);
 
         //  Helpers
 

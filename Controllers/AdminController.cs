@@ -311,7 +311,7 @@ namespace WePlayBall.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> TeamEdit(int id, [Bind("Id,TeamName,TeamCode,SubDivisionId")]
+        public async Task<IActionResult> TeamEdit(int id, [Bind("Id,TeamName,TeamCode,SubDivisionId, Address,PostCode,Website")]
             Team team)
         {
             if (id != team.Id)
@@ -319,7 +319,8 @@ namespace WePlayBall.Controllers
                 return NotFound();
             }
 
-            team.TeamCode = team.TeamCode.ToUpper();
+            //  once season is in season is in session no changes to team code
+            //team.TeamCode = team.TeamCode.ToUpper();
 
             if (!ModelState.IsValid)
             {
@@ -328,13 +329,31 @@ namespace WePlayBall.Controllers
                 return View(team);
             }
 
-            var subDivCodeExist = _wpbService.TeamCodeExist(team.TeamCode);
+            //  once season is in season is in session no changes to team code
+            /*var subDivCodeExist = _wpbService.TeamCodeExist(team.TeamCode);
             if (subDivCodeExist)
             {
                 var divisionList = await _wpbService.GetSubDivisionDropListAsync();
                 ViewData["SubDivision"] = new SelectList(divisionList, "Id", "SubDivisionTitle");
                 ModelState.AddModelError("", "$Team code: {team.TeamCode} is already in use.");
                 return View(team);
+            }*/
+
+            var teamCodeSanityCheck = await _wpbService.GetTeamAsync(id);
+            if (teamCodeSanityCheck != null)
+            {
+                // no changes to team code 
+                if (team.TeamCode != teamCodeSanityCheck.TeamCode)
+                {
+                    var divisionList = await _wpbService.GetSubDivisionDropListAsync();
+                    ViewData["SubDivision"] = new SelectList(divisionList, "Id", "SubDivisionTitle");
+                    ModelState.AddModelError("", "Changes to team code not allow while in session!");
+                    return View(team);
+                }
+            }
+            else
+            {
+                return NotFound();
             }
 
             var editSuccess = await _wpbService.UpdateTeamAsync(team);
@@ -371,6 +390,68 @@ namespace WePlayBall.Controllers
         {
             var results = _wpbService.GetGameResultsPageable(page);
             return View(results);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddTeamLogo(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var team = await _wpbService.GetTeamAsync(id.Value);
+            if (team == null)
+            {
+                return NotFound();
+            }
+
+            return View(team);
+        }
+
+        // POST: Burgers/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddTeamLogo([Bind("Id,BurgerImage")] Team team)
+        {
+
+            var teamExist = await _wpbService.GetTeamAsync(team.Id);
+            if (teamExist == null)
+            {
+                return View();
+            }
+
+            //  Picture required
+            if (HttpContext.Request.Form.Files.Count != 0)
+            {
+
+                var teamLogo = HttpContext.Request.Form.Files[0];
+                //  yes
+                if (teamLogo.Length > 0)
+                {
+                    //  filename format: teamcode-logo (to lower)
+                    var newFilename = teamExist.TeamCode + "-" + "logo";
+                    var fileName = await _wpbService.SaveTeamLogoAsync(teamLogo, newFilename.ToLower());
+                    teamExist.HasLogo = true;
+                    teamExist.Logo = fileName;
+                    await _wpbService.UpdateTeamAsync(teamExist);
+
+                    return RedirectToAction(nameof(TeamsAll));
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Image missing");
+                    return View();
+                }
+
+            }
+            else
+            {
+                ModelState.AddModelError("", "Image required");
+                return View();
+            }
         }
 
         //  Run once only
