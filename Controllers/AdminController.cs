@@ -414,7 +414,7 @@ namespace WePlayBall.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddTeamLogo([Bind("Id,BurgerImage")] Team team)
+        public async Task<IActionResult> AddTeamLogo([Bind("Id,LogoImage")] Team team)
         {
 
             var teamExist = await _wpbService.GetTeamAsync(team.Id);

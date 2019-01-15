@@ -212,6 +212,12 @@ namespace WePlayBall.Service
         /// <returns></returns>
         Task<IEnumerable<UserClaim>> GetUserClaimsAsync(Guid userId);
 
+        /// <summary>
+        /// Get all <see cref="GameResult"/>(s) as a list of <see cref="GameResultDto"/>
+        /// </summary>
+        /// <returns></returns>
+        List<GameResultDto> GetResultsAsDto();
+
         //  Persistence
 
         /// <summary>

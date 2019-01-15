@@ -1,6 +1,7 @@
 /*
     Variables
 */
+/*#f0ede8*/
 /*
     Typography
 */
@@ -17,17 +18,17 @@ h5,
 .uk-h5,
 h6,
 .uk-h6 {
-  color: #101017 !important;
-  font-weight: 100 !important;
-  font-family: 'Poppins', sans-serif;
+  color: #1c1c1c !important;
+  font-weight: 200 !important;
+  font-family: 'Nunito', sans-serif;
 }
 .uk-heading-hero {
-  font-weight: 100 !important;
-  color: #101017 !important;
+  font-weight: 200 !important;
+  color: #1c1c1c !important;
   text-transform: uppercase;
 }
 .uk-text-background {
-  background-color: #101017;
+  background-color: #1c1c1c;
 }
 /*
     Main layout
@@ -49,7 +50,10 @@ h6,
 html,
 body {
   height: 100%;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Nunito', sans-serif;
+  color: #1c1c1c;
+  background: #ffffff;
+  background-color: #ffffff;
 }
 .full-width-center {
   display: block;
@@ -59,17 +63,17 @@ body {
 .uk-logo:hover,
 .uk-logo:active,
 .uk-logo:visited {
-  color: #101017;
+  color: #1c1c1c;
 }
 .uk-navbar-toggle,
 .uk-navbar-toggle:hover,
 .uk-navbar-toggle:active,
 .uk-navbar-toggle:visited {
-  color: #101017;
+  color: #1c1c1c;
   padding-top: 2px;
 }
 .uk-light .uk-navbar-nav > li > a {
-  color: #101017;
+  color: #1c1c1c;
 }
 .uk-light .uk-navbar-nav > li.uk-active > a {
   color: green;
@@ -96,7 +100,7 @@ body {
   background-repeat: no-repeat;
 }
 .uk-section-lines {
-  background: #fff;
+  background: #242b2c;
   background-image: url(../images/assets/section-background-image-lines.svg);
   background-position-x: 50%;
 }

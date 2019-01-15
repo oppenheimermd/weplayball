@@ -18,6 +18,7 @@ namespace WePlayBall.Models.DTO
         public string SubDivision { get; set; }
         public string SubDivisionCode { get; set; }
 
+        //  full url: https://weplayball.azurewebsites.net/TeamLogos/
         public static string GetLogolUrl(string logo)
         {
             var _logo = (string.IsNullOrEmpty(logo)) ? string.Empty : $"/TeamLogos/{logo}";

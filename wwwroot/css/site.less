@@ -1,23 +1,28 @@
 ﻿/*
     Variables
 */
-@font-family: 'Poppins', sans-serif;
-@std-black: #101017;
+@font-family: 'Nunito', sans-serif;
+@std-black: #1c1c1c;
+@std-orange:#fdaa5b;
 @std-red: #F66669;
 @std-red-drk: #E2575E;
-@std-grey: #EFEDED;
+@std-grey: #f8f8f8;
+/*
+    #efefef
+    #EFEDED
+*/
 
 /*
     Typography
 */
 p, h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6 {
     color: @std-black !important;
-    font-weight: 100 !important;
+    font-weight: 200 !important;
     font-family: @font-family;
 }
 
 .uk-heading-hero {
-    font-weight: 100 !important;
+    font-weight: 200 !important;
     color: @std-black !important;
     text-transform: uppercase;
 }
@@ -51,6 +56,9 @@ p, h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6 {
 html, body {
     height: 100%;
     font-family: @font-family;
+    color: @std-black;
+    background: #ffffff;
+    background-color: #ffffff;
 }
 
 .full-width-center {
@@ -103,7 +111,7 @@ html, body {
 }
 
 .uk-section-lines {
-    background: #fff;
+    background: @std-grey;
     background-image: url(../images/assets/section-background-image-lines.svg);
     background-position-x: 50%;
 }

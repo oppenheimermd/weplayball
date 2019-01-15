@@ -356,6 +356,41 @@ namespace WePlayBall.Service
             return claims;
         }
 
+        public List<GameResultDto> GetResultsAsDto()
+        {
+            var timestampNow = DateTime.Now;
+            //  We only want the "last" seven days
+            var timestampSeven = timestampNow.AddDays(-7);
+
+            var query = (from g in _wpbDataContext.GameResults
+                where g.TimeStamp >= timestampSeven
+                         join homeTeam in _wpbDataContext.Teams on g.HomeTeamId equals homeTeam.Id
+                join awayTeam in _wpbDataContext.Teams on g.AwayTeamId equals awayTeam.Id
+                join subDiv in _wpbDataContext.SubDivisions on g.SubDivisionId equals subDiv.Id
+                join div in _wpbDataContext.Divisions on subDiv.DivisionId equals div.Id
+                select new GameResultDto
+                {
+                    TimeStamp = g.TimeStamp,
+                    HomeTeamName = homeTeam.TeamName,
+                    HomeTeamCode = homeTeam.TeamCode,
+                    HomeTeamHasLogo = homeTeam.HasLogo,
+                    HomeTeamLogo = GameResultDto.GetLogolUrl(homeTeam.Logo),
+                    AwayTeamName = awayTeam.TeamName,
+                    AwayTeamCode = awayTeam.TeamCode,
+                    AwayTeamHasLogo = awayTeam.HasLogo,
+                    AwayTeamLogo = GameResultDto.GetLogolUrl(awayTeam.Logo),
+                    Division = div.DivisionName,
+                    DivisionCode = div.DivisionCode,
+                    SubDivision = subDiv.SubDivisionTitle,
+                    SubDivisionCode = subDiv.SubDivisionCode,
+                    Score = g.Score,
+                    WinnerTeamName = g.WinningTeamName,
+                    WinnerTeamCode = g.WinningTeamCode
+                });
+
+            return query.ToList();
+        }
+
         //  Persistence
 
         public async Task CreateDivisionAsync(Division division)
