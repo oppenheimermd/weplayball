@@ -9,26 +9,27 @@ namespace WePlayBall.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class FixturesController : ControllerBase
+    public class ResultsController : ControllerBase
     {
         private readonly IWPBService _wpbService;
         private readonly SiteConfig _siteSettings;
 
-        public FixturesController(IWPBService wpbService, SiteConfig siteSettings)
+        public ResultsController(IWPBService wpbService, SiteConfig siteSettings)
         {
             _wpbService = wpbService;
             _siteSettings = siteSettings;
         }
 
-        // GET: api/Fixtures
+        //  Get all results
+        // GET: api/Results
         //[Authorize(Policy = WpbPolicy.PolicyReadTeamData)]
         [HttpGet]
-        public IActionResult GetTeams()
+        public IActionResult Index()
         {
 
-            var fixtures = _wpbService.GetFixturesAsDtoAsync();
+            var fixtures = _wpbService.GetResultsAsDto();
 
-            var filteredRequest = new FixtureGroupedRequestDto
+            var filteredRequest = new ResultsGroupedRequest
             {
                 FirstDivision = fixtures.Where(x => x.DivisionCode == "DIV1").ToList(),
                 SecondDivision = fixtures.Where(x => x.DivisionCode == "DIV2").ToList(),
