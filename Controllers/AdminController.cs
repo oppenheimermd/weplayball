@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WePlayBall.Helpers;
 using WePlayBall.Models;
+using WePlayBall.Models.Helpers;
 using WePlayBall.Security;
 using WePlayBall.Service;
 using WePlayBall.Settings;
@@ -24,6 +25,7 @@ namespace WePlayBall.Controllers
 
         public async Task<IActionResult> Index(int? page)
         {
+
             //await GetFixturesDataAsync();
             //await GetMatchResultsAsync();
             //await GetTeamStatsResultsAsync();
@@ -456,7 +458,7 @@ namespace WePlayBall.Controllers
 
         //  Run once only
         //  Run on 17/12/2018
-        public async Task AddDivisionsAsync()
+        /*public async Task AddDivisionsAsync()
         {
 
             var dataSources = new List<Division>()
@@ -540,6 +542,7 @@ namespace WePlayBall.Controllers
             }
 
         }
+        */
 
         public async Task GetMatchResultsAsync()
         {
@@ -601,10 +604,31 @@ namespace WePlayBall.Controllers
             }
         }
 
-        public async Task GetTeamStatsResultsAsync()
+        //  Team Stats
+
+        [HttpGet]
+        public async Task<IActionResult> StatsBySubDivision(int? page)
+        {
+            var subDivsAll = _wpbService.GetSubDivisionsPageable(page);
+            // last stat report run
+            ViewData["LastReportRun"] = await _wpbService.GetLastStaReportRun();
+
+            return View(subDivsAll);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateStatsReport()
+        {
+            await RunLeagueReportAsync();
+            return RedirectToAction(nameof(StatsBySubDivision));
+        }
+
+        public async Task<List<TeamStat>> GetTeamStatsResultsAsync()
         {
             //  Get all the data sources for ranking data
             var rankingDataSource = await _wpbService.GetRankingDataSources();
+            var statData = new List<TeamStat>();
 
             foreach (var result in rankingDataSource)
             {
@@ -631,15 +655,21 @@ namespace WePlayBall.Controllers
                                 BasketsAganist = stat.BasketsAganist,
                                 PointsDifference = stat.PointsDifference,
                                 Points = stat.Points,
-
+                                WinPercentage = StatisticsCalculator.WinPercentage(stat.GamesWon, stat.GamesPlayed).ToString(),
+                                LossPercentage = StatisticsCalculator.LossPercentage(stat.GamesLost, stat.GamesPlayed).ToString(),
+                                BasketsPerGame = StatisticsCalculator.BasketsPerGame(stat.BasketsFor, stat.GamesPlayed).ToString(),
+                                WinLossPercent = StatisticsCalculator.WinLossPercentage(stat.GamesWon, stat.GamesLost).ToString(),
+                                WinsOver500 = StatisticsCalculator.WinsOver50(stat.GamesWon, stat.GamesLost).ToString(),
+                                WPyth = StatisticsCalculator.WPyth(stat.BasketsFor, stat.BasketsAganist).ToString(),
                             };
-                            await _wpbService.CreateTeamStatAsync(newStat);
+                            statData.Add(newStat);
                         }
                         else
                         {
                             throw new System.ArgumentException(
                                 "Detected null values in either team variable!");
                         }
+
                     }
                     catch (Exception err)
                     {
@@ -648,7 +678,54 @@ namespace WePlayBall.Controllers
                 }
             }
 
+            return statData;
+
         }
+
+        [HttpGet]
+        public IActionResult ViewStatsBySubDivision(int subDivId)
+        {
+            var stats = _wpbService.GetTeamsStatsBySubDivisionAsync(subDivId);
+            return View(stats);
+        }
+
+        public async Task PurgeStatTable(IEnumerable<TeamStat> oldTeamStats)
+        {
+            if (oldTeamStats == null) return;
+            foreach (var stat in oldTeamStats)
+            {
+                await _wpbService.DeleteTeamStatAsync(stat);
+            }
+        }
+
+        public async Task UpdateStatTable(IEnumerable<TeamStat> teamStats)
+        {
+            if (teamStats == null) return;
+            foreach (var stat in teamStats)
+            {
+                await _wpbService.CreateTeamStatAsync(stat);
+            }
+        }
+
+        public async Task RunLeagueReportAsync()
+        {
+            //return RedirectToAction(nameof(StatsBySubDivision));
+            var staleState = await _wpbService.GetStatsAllAsync();
+            var freshState = await GetTeamStatsResultsAsync();
+            //  purge old team stats
+            await PurgeStatTable(staleState);
+
+            await UpdateStatTable(freshState);
+
+            //  add new report tracker object
+            var newReportRun = new ReportTracker()
+            {
+                ReportTypeCode = ModelHelpers.REPORT_STAT
+            };
+            await _wpbService.CreateReportHistory(newReportRun);
+
+        }
+
 
         public string EncodeGameResult(string homeTeam, string awayTeam, DateTime timestamp)
         {

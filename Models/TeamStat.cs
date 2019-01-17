@@ -56,5 +56,18 @@ namespace WePlayBall.Models
 
         [Required]
         public int Points { get; set; }
+
+        public string WPyth { get; set; }
+
+        public string WinsOver500 { get; set; }
+
+        public string WinLossPercent { get; set; }
+
+        public string BasketsPerGame { get; set; }
+
+        public string LossPercentage { get; set; }
+
+        public string WinPercentage { get; set; }
+
     }
 }

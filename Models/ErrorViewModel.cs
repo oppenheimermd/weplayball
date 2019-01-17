@@ -1,6 +1,6 @@
 using System;
 
-namespace weplayball.Models
+namespace WePlayBall.Models
 {
     public class ErrorViewModel
     {

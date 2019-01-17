@@ -1,0 +1,107 @@
+﻿@model Task<List<TeamStat>>
+
+@{
+    ViewData["Title"] = "ViewStatsBySubDivision";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section DefaultHeader{
+    <ul class="uk-breadcrumb">
+        <li>
+            <a asp-controller="Admin" asp-action="Index">All</a>
+        </li>
+    </ul>
+}
+
+
+<table class="uk-table uk-table-divide uk-table-hover">
+    <thead>
+    <tr>
+        <th>
+            Team
+        </th>
+        <th>
+            Rank
+        </th>
+        <th>
+            Played
+        </th>
+        <th>
+            W
+        </th>
+        <th>
+            L
+        </th>
+        <th>
+            B/For
+        </th>
+        <th>
+            B/Against
+        </th>
+        <th>
+            PD
+        </th>
+        <th>
+            WPyth
+        </th>
+        <th>
+            .500
+        </th>
+        <th>
+            W%
+        </th>
+        <th>
+            BPG
+        </th>
+        <th>
+            W-L%
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Result)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeamName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Position)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GamesPlayed)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GamesWon)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GamesLost)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BasketsFor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BasketsAganist)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PointsDifference)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WPyth)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WinsOver500)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WinLossPercent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BasketsPerGame)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WinLossPercent)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
