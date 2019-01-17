@@ -391,6 +391,56 @@ namespace WePlayBall.Service
             return query.ToList();
         }
 
+        /*
+        public PagedResult<Team> GetTeamsBySubDivisionPageable(int? page, int Id)
+        {
+            var teams = _wpbDataContext.Teams
+                .Include(x => x.SubDivision)
+                .ThenInclude(x => x.Division)
+                .OrderByDescending(x => x.TeamName)
+                .Where(x => x.SubDivision.Id == Id)
+                .AsNoTracking()
+                .GetPaged(page ?? 1, int.Parse(_siteSettings.ItemsPerPage));
+
+            return teams;
+        }
+         */
+
+
+        public async Task<List<TeamStat>> GetTeamsStatsBySubDivisionAsync(int subDivId)
+        {
+
+            var results = await _wpbDataContext.TeamStats
+                .Include(x => x.SubDivision)
+                .ThenInclude(subdivision => subdivision.Division)
+                .Where(x => x.SubDivision.Id == subDivId)
+                .OrderBy(x => x.Position)
+                .AsNoTracking().ToListAsync();
+
+            return results;
+        }
+
+
+        public async Task<IEnumerable<TeamStat>> GetStatsAllAsync()
+        {
+            var query = await _wpbDataContext.TeamStats
+                .Include(x => x.SubDivision)
+                .ThenInclude(subdivision => subdivision.Division)
+                .AsNoTracking().ToListAsync();
+            return query;
+        }
+
+        public async Task<ReportTracker> GetLastStaReportRun()
+        {
+            var query = await _wpbDataContext.ReportTracking
+                .Where( x => x.ReportTypeCode == ModelHelpers.REPORT_STAT)
+                .OrderByDescending(x => x.TimeStamp)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+            return query;
+        }
+
+
         //  Persistence
 
         public async Task CreateDivisionAsync(Division division)
@@ -532,6 +582,12 @@ namespace WePlayBall.Service
             await _wpbDataContext.SaveChangesAsync();
         }
 
+        public async Task CreateReportHistory(ReportTracker reportTracker)
+        {
+            _wpbDataContext.ReportTracking.Add(reportTracker);
+            await _wpbDataContext.SaveChangesAsync();
+        }
+
         public async Task<User> CreateUserAsync(User user, string password)
         {
             byte[] passwordHash, passwordSalt;
@@ -549,6 +605,13 @@ namespace WePlayBall.Service
         public async Task AddUserClaimAsync(UserClaim userClaim)
         {
             _wpbDataContext.UserClaims.Add(userClaim);
+            await _wpbDataContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteTeamStatAsync(TeamStat teamStat)
+        {
+            var query = await _wpbDataContext.TeamStats.FindAsync(teamStat.Id);
+            _wpbDataContext.TeamStats.Remove(query);
             await _wpbDataContext.SaveChangesAsync();
         }
 

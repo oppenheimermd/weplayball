@@ -1,11 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using WePlayBall.Models.DTO;
 
 namespace WePlayBall.Models.Helpers
 {
     public static class ModelHelpers
     {
+        public static string REPORT_STAT = "STRO";
+
+        //  Four letter code for report types
+        public static List<SelectListItem> ReportTypeDropDown = new List<SelectListItem>
+        {
+            new SelectListItem {Text = "Stat Report", Value = "STRP"},
+            new SelectListItem {Text = "Other", Value = "OTH"}
+        };
+
         /// <summary>
         /// From <see cref="Team"/> to <see cref="TeamDto"/>
         /// </summary>

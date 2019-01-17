@@ -218,6 +218,25 @@ namespace WePlayBall.Service
         /// <returns></returns>
         List<GameResultDto> GetResultsAsDto();
 
+        /// <summary>
+        /// Get all <see cref="TeamStat"/>(s) by <see cref="SubDivision"/> as list
+        /// </summary>
+        /// <param name="subDivId"></param>
+        /// <returns></returns>
+        Task<List<TeamStat>> GetTeamsStatsBySubDivisionAsync(int subDivId);
+
+        /// <summary>
+        /// Get all <see cref="TeamStat"/>(s) Async
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<TeamStat>> GetStatsAllAsync();
+
+        /// <summary>
+        /// Get last instance of a Report run for type <see cref="ModelHelpers.REPORT_STAT"/>
+        /// </summary>
+        /// <returns></returns>
+        Task<ReportTracker> GetLastStaReportRun();
+
         //  Persistence
 
         /// <summary>
@@ -318,6 +337,13 @@ namespace WePlayBall.Service
         Task CreateTeamStatAsync(TeamStat stat);
 
         /// <summary>
+        /// Create an instance of a <see cref="ReportTracker"/>
+        /// </summary>
+        /// <param name="reportTracker"></param>
+        /// <returns></returns>
+        Task CreateReportHistory(ReportTracker reportTracker);
+
+        /// <summary>
         /// Create a <see cref="User"/>
         /// </summary>
         /// <param name="user"></param>
@@ -331,6 +357,13 @@ namespace WePlayBall.Service
         /// <param name="userClaim"></param>
         /// <returns></returns>
         Task AddUserClaimAsync(UserClaim userClaim);
+
+        /// <summary>
+        /// Delete and instance of a <see cref="TeamStat"/>
+        /// </summary>
+        /// <param name="teamStat"></param>
+        /// <returns></returns>
+        Task DeleteTeamStatAsync(TeamStat teamStat);
 
         /// <summary>
         /// Create and resize a <see cref="Team"/>(s) logo

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WePlayBall.Data;
 
 namespace weplayball.Migrations
 {
     [DbContext(typeof(WPBDataContext))]
-    partial class WPBDataContextModelSnapshot : ModelSnapshot
+    [Migration("20190116174821_Tbl_ReportTracker")]
+    partial class Tbl_ReportTracker
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -304,15 +306,11 @@ namespace weplayball.Migrations
 
                     b.Property<int>("BasketsFor");
 
-                    b.Property<string>("BasketsPerGame");
-
                     b.Property<int>("GamesLost");
 
                     b.Property<int>("GamesPlayed");
 
                     b.Property<int>("GamesWon");
-
-                    b.Property<string>("LossPercentage");
 
                     b.Property<int>("Points");
 
@@ -331,14 +329,6 @@ namespace weplayball.Migrations
                     b.Property<string>("TeamName")
                         .IsRequired()
                         .HasMaxLength(200);
-
-                    b.Property<string>("WPyth");
-
-                    b.Property<string>("WinLossPercent");
-
-                    b.Property<string>("WinPercentage");
-
-                    b.Property<string>("WinsOver500");
 
                     b.HasKey("Id");
 

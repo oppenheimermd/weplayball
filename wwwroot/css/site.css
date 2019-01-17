@@ -1,7 +1,14 @@
 /*
     Variables
 */
-/*#f0ede8*/
+/*
+    #1b1b1b
+*/
+/*
+    #efefef
+    #EFEDED
+    #f8f8f8
+*/
 /*
     Typography
 */
@@ -38,6 +45,9 @@ h6,
   z-index: 980;
   left: 0;
   right: 0;
+}
+.logo-header {
+  height: 32px;
 }
 .main-page {
   position: relative;
@@ -96,11 +106,11 @@ body {
     Sections
 */
 .uk-section-default {
-  background: #fff;
+  background: #f8f8f8;
   background-repeat: no-repeat;
 }
 .uk-section-lines {
-  background: #242b2c;
+  background: #f8f8f8;
   background-image: url(../images/assets/section-background-image-lines.svg);
   background-position-x: 50%;
 }

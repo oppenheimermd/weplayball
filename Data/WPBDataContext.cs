@@ -32,6 +32,7 @@ namespace WePlayBall.Data
             modelBuilder.Entity<Team>().ToTable("Team");
             modelBuilder.Entity<User>().ToTable("User");
             modelBuilder.Entity<UserClaim>().ToTable("UserClaim");
+            modelBuilder.Entity<ReportTracker>().ToTable("ReportTracker");
 
             modelBuilder.Entity<Team>()
                 .HasIndex(x => x.TeamCode)
@@ -59,5 +60,6 @@ namespace WePlayBall.Data
         public DbSet<Team> Teams { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserClaim> UserClaims { get; set; }
+        public DbSet<ReportTracker>ReportTracking { get; set; }
     }
 }

@@ -1,0 +1,118 @@
+﻿@model WePlayBall.Models.Helpers.PagedResult<WePlayBall.Models.SubDivision>
+
+@{
+    ViewData["Title"] = "Sub Division Stats Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var lastRun = ViewData["LastReportRun"] as WePlayBall.Models.ReportTracker;
+}
+
+@section DefaultHeader{
+    <ul class="uk-breadcrumb">
+        <li>
+            <a asp-controller="Admin" asp-action="Index">All</a>
+        </li>
+    </ul>
+}
+
+<p>
+    <a asp-action="UpdateStatsReport" asp-controller="Admin">Update Stats</a>
+    <br />
+    Last stat report run: @lastRun?.TimeStamp.ToLongDateString()
+</p>
+
+<table class="uk-table uk-table-divide uk-table-hover">
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                SubDivision Title
+            </th>
+            <th>
+                SubDivision Code
+            </th>
+            <th>
+                Division Title
+            </th>
+            <th>
+                Division Code
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Results)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubDivisionTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubDivisionCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Division.DivisionName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Division.DivisionCode)
+                </td>
+                <td>
+                    <a asp-action="ViewStatsBySubDivision" asp-controller="Admin" asp-route-page="0" asp-route-subDivId="@item.Id">Stats</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@{
+    var urlTemplate = Url.Action() + "?page={0}";
+    var request = ViewContext.HttpContext.Request;
+    foreach (var key in request.Query.Keys)
+    {
+        if (key == "page")
+        {
+            continue;
+        }
+
+        urlTemplate += "&" + key + "=" + request.Query[key];
+    }
+
+    var startIndex = Math.Max(Model.CurrentPage - 5, 1);
+    var finishIndex = Math.Min(Model.CurrentPage + 5, Model.PageCount);
+}
+
+<div class="row">
+    <div class="col-md-8 col-sm-8 items-info">
+        Items @Model.FirstRowOnPage to @Model.LastRowOnPage of @Model.RowCount total
+    </div>
+</div>
+
+
+<div>
+    @if (Model.PageCount > 1)
+    {
+        <ul class="uk-pagination uk-flex-center">
+            <li><a href="@urlTemplate.Replace("{0}", "1")">&laquo;</a></li>
+            @for (var i = startIndex; i <= finishIndex; i++)
+            {
+                if (i == Model.CurrentPage)
+                {
+
+                    <li class="uk-active"><span>@i</span></li>
+                }
+                else
+                {
+
+                    <li><a href="@urlTemplate.Replace("{0}", i.ToString())">@i</a></li>
+                }
+            }
+            <li><a href="@urlTemplate.Replace("{0}", Model.PageCount.ToString())">&raquo;</a></li>
+        </ul>
+
+    }
+</div>
