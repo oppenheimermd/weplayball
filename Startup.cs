@@ -2,8 +2,8 @@
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -82,6 +82,17 @@ namespace WePlayBall
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            //  EDIT Monday 21, January 2019
+            //  see:    http://oloshcoder.com/2018/05/21/jwt-token-with-cookie-authentication-in-asp-net-core/
+            services.AddAuthentication(o => {
+                o.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                o.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                o.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie(options => {
+                options.AccessDeniedPath = new PathString("/Account/Login/");
+                options.LoginPath = new PathString("/Account/Login/");
+            });
+
             services.AddScoped<IWPBService, WPBService>();
 
             //  This provides you a filled config object instance that has values set from the various
@@ -110,6 +121,11 @@ namespace WePlayBall
             }
 
             app.UseHttpsRedirection();
+
+            //  EDIT Monday 21, January 2019
+            //  see:    http://oloshcoder.com/2018/05/21/jwt-token-with-cookie-authentication-in-asp-net-core/
+            app.UseAuthentication();
+
             app.UseStaticFiles();
 
             //  In order to make the authentication service available to the application, we need to

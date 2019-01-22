@@ -1,58 +1,42 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace WePlayBall.Models
+namespace WePlayBall.Models.DTO
 {
-    public class TeamStat
+    public class TeamStatDto
     {
-        [Key]
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(200, ErrorMessage = "300 characters maximum")]
         public string TeamName { get; set; }
 
-        [Required]
         public int TeamId { get; set; }
 
         /// <summary>
         /// Team code for home team
         /// </summary>
-        [Required]
-        [MaxLength(4)]
         public string TeamCode { get; set; }
 
-        public virtual SubDivision SubDivision { get; set; }
-
-        [Required]
-        [ForeignKey("SubDivision")]
         public int SubDivisionId { get; set; }
 
         /// <summary>
         /// Rank position
         /// </summary>
-        [Required]
         public int Position { get; set; }
 
-        [Required]
         public int GamesPlayed { get; set; }
 
-        [Required]
         public int GamesWon { get; set; }
 
-        [Required]
         public int GamesLost { get; set; }
 
-        [Required]
         public int BasketsFor { get; set; }
 
-        [Required]
         public int BasketsAganist { get; set; }
 
-        [Required]
         public int PointsDifference { get; set; }
 
-        [Required]
         public int Points { get; set; }
 
         public string WPyth { get; set; }
@@ -66,6 +50,5 @@ namespace WePlayBall.Models
         public string LossPercentage { get; set; }
 
         public string WinPercentage { get; set; }
-
     }
 }

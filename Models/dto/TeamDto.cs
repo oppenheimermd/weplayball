@@ -26,6 +26,8 @@
         {
             return $"/TeamLogos/{Logo}";
         }
+
+        public TeamStatDto TeamStatDto { get; set; }
     }
 }
 

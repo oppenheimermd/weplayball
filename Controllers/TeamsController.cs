@@ -25,21 +25,34 @@ namespace WePlayBall.Controllers
         }
 
         // GET: api/Teams
-        [Authorize(Policy = WpbPolicy.PolicyReadTeamData)]
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TeamDto>>> GetTeams()
         {
             return await _wpbService.GetTeamsAllAsync();
         }
 
-        //  Testing
-        [HttpGet]
-        [Route("public")]
-        public IActionResult Public()
+        //  /api/teams/[teamCode]
+        [HttpGet("{teamcode}", Name = "TeamDetails")]
+        public async Task<ActionResult> GetTeamInfo(string teamCode)
         {
-            var msg = "Hello from a public endpoint! You don't need to be authenticated to see this.";
-            return Ok(msg);
+            if (string.IsNullOrEmpty(teamCode))
+                return NotFound();
+
+            var team = await _wpbService.GetTeamByTeamCodeDto(teamCode);
+            var teamStats = await _wpbService.GetTeamStat(teamCode);
+            
+            if (team != null && teamStats != null)
+            {
+                team.TeamStatDto = teamStats;
+                return Ok(team);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
+
 
 
     }

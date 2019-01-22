@@ -1,0 +1,68 @@
+﻿@model WePlayBall.Models.DTO.FrontEndLogin
+@{
+    ViewData["Title"] = "Login - WePlayBall";
+    Layout = null;
+}
+
+<head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.25/css/uikit.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.23/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.23/js/uikit-icons.min.js"></script>
+</head>
+
+<body>
+    <div class="uk-section-lines uk-section-muted uk-flex uk-flex-middle uk-animation-fade" uk-height-viewport>
+        <!-- start: uk-width-1-1 -->
+        <div class="uk-width-1-1">
+            <!-- start: uk-container -->
+            <div class="uk-container">
+                <!-- start: uk-grid-margin uk-grid-stack -->
+                <div class="uk-grid-margin uk-grid-stack" uk-grid>
+                    <!-- start: uk-width-1-1@m -->
+                    <div class="uk-width-1-1@m">
+                        <!-- start: uk-margin uk-width-large uk-margin-auto uk-card uk-card-default uk-card-body uk-box-shadow-large -->
+                        <div class="uk-margin uk-width-large uk-margin-auto uk-card uk-card-default uk-card-body uk-box-shadow-large">
+                            <h3 class="uk-card-title uk-text-center">Welcome back!</h3>
+                            <form asp-action="Login" asp-controller="Account">
+                                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                                <div asp-validation-summary="ModelOnly" class="uk-form-danger"></div>
+                                <div class="uk-margin">
+                                    <div class="uk-inline uk-width-1-1">
+                                        <span class="uk-form-icon" uk-icon="icon: mail"></span>
+                                        <input asp-for="Username" class="uk-input uk-form-large" type="text">
+                                        <span asp-validation-for="Username" class="uk-form-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="uk-margin">
+                                    <div class="uk-inline uk-width-1-1">
+                                        <span class="uk-form-icon" uk-icon="icon: lock"></span>
+                                        <input asp-for="Password" class="uk-input uk-form-large" type="password" />                                        
+                                        <span asp-validation-for="Password" class="uk-form-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="uk-margin">
+                                    <button class="uk-button uk-button-primary uk-button-large uk-width-1-1">Login</button>
+                                </div>
+                                <div class="uk-text-small uk-text-center">
+                                    Not registered? <a href="#">Create an account</a>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- end: uk-margin uk-width-large uk-margin-auto uk-card uk-card-default uk-card-body uk-box-shadow-large -->
+                    </div>
+                    <!-- end: uk-width-1-1@m -->
+                </div>
+                <!-- end: uk-grid-margin uk-grid-stack -->
+            </div>
+            <!-- end: uk-container -->
+        </div>
+        <!-- end: uk-width-1-1 -->
+    </div>
+</body>
+
+
+
+

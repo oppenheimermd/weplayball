@@ -130,6 +130,18 @@ namespace WePlayBall.Service
             return team;
         }
 
+        public async Task<TeamDto> GetTeamByTeamCodeDto(string teamCode)
+        {
+            var team = await _wpbDataContext.Teams
+                .Include(x => x.SubDivision)
+                .ThenInclude(subdivision => subdivision.Division)
+                .AsNoTracking()
+                .Select(ModelHelpers.AsTeamDto)
+                .FirstOrDefaultAsync(x => x.TeamCode == teamCode);
+
+            return team;
+        }
+
         public async Task<List<TeamDto>> GetTeamsAllAsync()
         {
             var teams = await _wpbDataContext.Teams
@@ -427,6 +439,17 @@ namespace WePlayBall.Service
                 .Include(x => x.SubDivision)
                 .ThenInclude(subdivision => subdivision.Division)
                 .AsNoTracking().ToListAsync();
+            return query;
+        }
+
+        public async Task<TeamStatDto> GetTeamStat(string teamCode)
+        {
+            var query = await _wpbDataContext.TeamStats
+                .Include(x => x.SubDivision)
+                .ThenInclude(subdivision => subdivision.Division)
+                .Select(ModelHelpers.AsTeamStatDto)
+                .FirstOrDefaultAsync(x => x.TeamCode == teamCode);
+
             return query;
         }
 
