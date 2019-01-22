@@ -84,6 +84,14 @@ namespace WePlayBall.Service
         Task<Team> GetTeamByTeamCode(string teamCode);
 
         /// <summary>
+        /// Get a <see cref="TeamDto"/> by team code query.  Includes <see cref="Division"/> and <see cref="SubDivision"/>. Team
+        /// is return as an instance of a <see cref="TeamDto"/>
+        /// </summary>
+        /// <param name="teamCode"></param>
+        /// <returns></returns>
+        Task<TeamDto> GetTeamByTeamCodeDto(string teamCode);
+
+        /// <summary>
         /// Get all <see cref="TeamDto"/>(s) by team name query.  Includes <see cref="Division"/> and <see cref="SubDivision"/>
         /// </summary>
         /// <returns></returns>
@@ -230,6 +238,13 @@ namespace WePlayBall.Service
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<TeamStat>> GetStatsAllAsync();
+
+        /// <summary>
+        /// Get <see cref="TeamStatDto"/> for a specified team by team code
+        /// </summary>
+        /// <param name="teamCode"></param>
+        /// <returns></returns>
+        Task<TeamStatDto> GetTeamStat(string teamCode);
 
         /// <summary>
         /// Get last instance of a Report run for type <see cref="ModelHelpers.REPORT_STAT"/>

@@ -45,6 +45,30 @@ namespace WePlayBall.Models.Helpers
                 SubDivisionCode = x.SubDivision.SubDivisionCode
             };
 
+        public static readonly Expression<Func<TeamStat, TeamStatDto>> AsTeamStatDto =
+            x => new TeamStatDto()
+            {
+                Id = x.Id,
+                TeamName = x.TeamName,
+                TeamId = x.TeamId,
+                TeamCode = x.TeamCode,
+                SubDivisionId = x.SubDivisionId,
+                Position = x.Position,
+                GamesPlayed = x.GamesPlayed,
+                GamesWon = x.GamesWon,
+                GamesLost = x.GamesLost,
+                BasketsFor = x.BasketsFor,
+                BasketsAganist = x.BasketsAganist,
+                PointsDifference = x.PointsDifference,
+                Points = x.Points,
+                WPyth = x.WPyth,
+                WinsOver500 = x.WinsOver500,
+                WinLossPercent = x.WinLossPercent,
+                BasketsPerGame = x.BasketsPerGame,
+                LossPercentage = x.LossPercentage,
+                WinPercentage = x.WinPercentage
+            };
+
         // Typed lambda expression for Select() method. 
         /*public static readonly Expression<Func<Division, DivisonDto>> AsDivisionDto =
             x => new DivisonDto
