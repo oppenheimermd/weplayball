@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using WePlayBall.Authorization;
 using WePlayBall.Helpers;
 using WePlayBall.Models;
 using WePlayBall.Models.Helpers;
@@ -23,6 +25,7 @@ namespace WePlayBall.Controllers
             _siteSettings = siteSettings;
         }
 
+        [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
         public async Task<IActionResult> Index(int? page)
         {
 
@@ -388,10 +391,19 @@ namespace WePlayBall.Controllers
             return View(fixtures);
         }
 
-        public IActionResult ResultsAll(int? page)
+        public async Task<IActionResult> ResultsAll(int? page)
         {
+            // last stat report run
+            ViewData["LastReportRun"] = await _wpbService.GetLastResultsReportRun();
             var results = _wpbService.GetGameResultsPageable(page);
             return View(results);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateResultsAsync()
+        {
+            await GetMatchResultsAsync();
+            return RedirectToAction(nameof(ResultsAll));
         }
 
         [HttpGet]
@@ -602,6 +614,14 @@ namespace WePlayBall.Controllers
                     }
                 }
             }
+
+            //  add new report tracker object
+            var newReportRun = new ReportTracker()
+            {
+                ReportTypeCode = ModelHelpers.REPORT_RSLT
+            };
+            await _wpbService.CreateReportHistory(newReportRun);
+
         }
 
         //  Team Stats
@@ -611,7 +631,7 @@ namespace WePlayBall.Controllers
         {
             var subDivsAll = _wpbService.GetSubDivisionsPageable(page);
             // last stat report run
-            ViewData["LastReportRun"] = await _wpbService.GetLastStaReportRun();
+            ViewData["LastReportRun"] = await _wpbService.GetLastStatReportRun();
 
             return View(subDivsAll);
         }
@@ -725,7 +745,6 @@ namespace WePlayBall.Controllers
             await _wpbService.CreateReportHistory(newReportRun);
 
         }
-
 
         public string EncodeGameResult(string homeTeam, string awayTeam, DateTime timestamp)
         {

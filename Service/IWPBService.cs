@@ -250,7 +250,27 @@ namespace WePlayBall.Service
         /// Get last instance of a Report run for type <see cref="ModelHelpers.REPORT_STAT"/>
         /// </summary>
         /// <returns></returns>
-        Task<ReportTracker> GetLastStaReportRun();
+        Task<ReportTracker> GetLastStatReportRun();
+
+        /// <summary>
+        /// Get last instance of a report run for type <see cref="ModelHelpers.REPORT_RSLT"/>
+        /// </summary>
+        /// <returns></returns>
+        Task<ReportTracker> GetLastResultsReportRun();
+
+        /// <summary>
+        /// Check if username for <see cref="User"/> is unique on registering
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        Task<bool> UsernameUnique(string username);
+
+        /// <summary>
+        /// Check if email for <see cref="User"/> is unique on registering
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        Task<bool> EmailUnique(string email);
 
         //  Persistence
 

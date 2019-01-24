@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WePlayBall.Models.DTO;
 using WePlayBall.Service;
@@ -9,6 +11,7 @@ namespace WePlayBall.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ResultsController : ControllerBase
     {
         private readonly IWPBService _wpbService;
@@ -24,7 +27,7 @@ namespace WePlayBall.Controllers
         // GET: api/Results
         //[Authorize(Policy = WpbPolicy.PolicyReadTeamData)]
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult GetAllResults()
         {
 
             var fixtures = _wpbService.GetResultsAsDto();

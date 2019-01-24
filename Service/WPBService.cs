@@ -453,7 +453,7 @@ namespace WePlayBall.Service
             return query;
         }
 
-        public async Task<ReportTracker> GetLastStaReportRun()
+        public async Task<ReportTracker> GetLastStatReportRun()
         {
             var query = await _wpbDataContext.ReportTracking
                 .Where( x => x.ReportTypeCode == ModelHelpers.REPORT_STAT)
@@ -463,6 +463,41 @@ namespace WePlayBall.Service
             return query;
         }
 
+        public async Task<ReportTracker> GetLastResultsReportRun()
+        {
+            var query = await _wpbDataContext.ReportTracking
+                .Where(x => x.ReportTypeCode == ModelHelpers.REPORT_RSLT)
+                .OrderByDescending(x => x.TimeStamp)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+            return query;
+        }
+
+        public async Task<bool> UsernameUnique(string username)
+        {
+            var usernameToLower = username.ToLower();
+
+            var query = await _wpbDataContext.Users
+                .Where(x => x.Username == usernameToLower)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            var isUnique = (query == null);
+            return isUnique;
+        }
+
+        public async Task<bool> EmailUnique(string email)
+        {
+            var emailToLower = email.ToLower();
+
+            var query = await _wpbDataContext.Users
+                .Where(x => x.Email == emailToLower)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            var isUnique = (query == null);
+            return isUnique;
+        }
 
         //  Persistence
 

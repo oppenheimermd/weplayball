@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Results";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var lastRun = ViewData["LastReportRun"] as WePlayBall.Models.ReportTracker;
 }
 
 @section DefaultHeader{
@@ -13,6 +14,11 @@
     </ul>
 }
 
+    <p>
+        <a asp-action="UpdateResultsAsync" asp-controller="Admin">Update Results</a>
+        <br />
+        Last stat report run: @lastRun?.TimeStamp.ToLongDateString()
+    </p>
 
 <table class="uk-table uk-table-divide uk-table-hover">
     <thead>

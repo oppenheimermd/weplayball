@@ -9,6 +9,7 @@ namespace WePlayBall.Models.Helpers
     public static class ModelHelpers
     {
         public static string REPORT_STAT = "STRO";
+        public static string REPORT_RSLT = "RSLT";
 
         //  Four letter code for report types
         public static List<SelectListItem> ReportTypeDropDown = new List<SelectListItem>

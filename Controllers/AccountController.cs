@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using WePlayBall.Authorization;
 using WePlayBall.Models;
 using WePlayBall.Service;
 using WePlayBall.Settings;
@@ -31,7 +32,7 @@ namespace WePlayBall.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login(string returnUrl = null)
+        public async Task<IActionResult> Login(string returnUrl = null)
         {
             // If the user is already authenticated we do not need to display the login page, so we redirect to the landing page. 
             if (User.Identity.IsAuthenticated)
@@ -39,6 +40,7 @@ namespace WePlayBall.Controllers
                 return RedirectToAction("Index", "Home");
             }
             ViewData["ReturnUrl"] = returnUrl;
+
             return View();
         }
 
@@ -69,7 +71,7 @@ namespace WePlayBall.Controllers
                         //  https://tahirnaushad.com/2017/09/08/asp-net-core-2-0-cookie-authentication/
                         new AuthenticationProperties
                         {
-                            ExpiresUtc = DateTime.UtcNow.AddMonths(12)
+                            ExpiresUtc = DateTime.UtcNow.AddDays(30)
                         });
                     return returnUrl != null ? RedirectToLocal(returnUrl) : RedirectToAction("Index", "Home");
                 }
@@ -78,7 +80,7 @@ namespace WePlayBall.Controllers
             
         }
 
-        [HttpPost]
+        //[HttpPost]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -106,6 +108,54 @@ namespace WePlayBall.Controllers
             claims.AddRange(userClaims.Select(claim => new Claim(claim.ClaimName, true.ToString())));
 
             return claims;
+        }
+
+        /// <summary>
+        ///  Run once only!!
+        /// </summary>
+        /// <returns></returns>
+        private async Task BuildAdmin()
+        {
+            var user = new User()
+            {
+                Email = "",
+                FirstName = "",
+                Username = ""
+            };
+            var password = "";
+
+
+            //  Add user
+            await _wpbService.CreateUserAsync(user, password);
+
+            var claimsList = new List<UserClaim>()
+            {
+                new UserClaim()
+                {
+                    UserId = user.Id,
+                    ClaimName = WpbClaims.ReadEditTeam
+                },
+                new UserClaim()
+                {
+                    UserId = user.Id,
+                    ClaimName = WpbClaims.ReadEditTeamsAll
+                },
+                new UserClaim()
+                {
+                    UserId = user.Id,
+                    ClaimName = WpbClaims.RunReadReportsAll
+                },
+                new UserClaim()
+                {
+                    UserId = user.Id,
+                    ClaimName = WpbClaims.RunReadReportsTeam
+                }
+            };
+
+            foreach (var claim in claimsList)
+            {
+                await _wpbService.AddUserClaimAsync(claim);
+            }
         }
     }
 }
