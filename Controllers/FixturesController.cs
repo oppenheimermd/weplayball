@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WePlayBall.Models.DTO;
 using WePlayBall.Service;
@@ -8,6 +10,7 @@ namespace WePlayBall.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class FixturesController : ControllerBase
     {
@@ -21,9 +24,8 @@ namespace WePlayBall.Controllers
         }
 
         // GET: api/Fixtures
-        //[Authorize(Policy = WpbPolicy.PolicyReadTeamData)]
         [HttpGet]
-        public IActionResult GetTeams()
+        public IActionResult GetAllFixtures()
         {
 
             var fixtures = _wpbService.GetFixturesAsDtoAsync();

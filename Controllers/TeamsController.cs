@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WePlayBall.Authorization;
@@ -13,6 +14,7 @@ namespace WePlayBall.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TeamsController : ControllerBase
     {
         private readonly IWPBService _wpbService;
@@ -33,6 +35,7 @@ namespace WePlayBall.Controllers
         }
 
         //  /api/teams/[teamCode]
+        [Authorize]
         [HttpGet("{teamcode}", Name = "TeamDetails")]
         public async Task<ActionResult> GetTeamInfo(string teamCode)
         {

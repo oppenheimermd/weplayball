@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using WePlayBall.Authorization;
+using WePlayBall.Helpers.Api.ApiErrors;
 using WePlayBall.Models;
 using WePlayBall.Models.DTO;
 using WePlayBall.Service;
@@ -31,15 +32,17 @@ namespace WePlayBall.Controllers
             _siteSettings = siteSettings;
         }
 
+
+
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public async Task<IActionResult> CreateToken([FromBody]LoginModelDto login)
         {
             var user = await _wpbService.AuthenticateAsync(login.Username, login.Password);
             if (user == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+                return BadRequest(new ApiError(400, "BadRequest", "Username or password was incorrect."));
 
-            var tokenString = await BuildTokenAsync(user);
+            var tokenString = GenerateToken(user);
 
             return Ok(
                 new
@@ -58,7 +61,7 @@ namespace WePlayBall.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiError(400, "BadRequest", "Password and username required."));
             }
 
             var newUser = new User()
@@ -69,22 +72,45 @@ namespace WePlayBall.Controllers
             };
 
 
+            //  Username unique?
+            var isUsernameUnique = await _wpbService.UsernameUnique(newUser.Username);
+            if (!isUsernameUnique)
+                return BadRequest(new ApiError(400, "BadRequest", $"Username: {registerModel.Username} is already in use."));
+
+            //  Email unique?
+            var isEmailUnique = await _wpbService.EmailUnique(newUser.Email);
+            if (!isEmailUnique)
+                return BadRequest(new ApiError(400, "BadRequest", $"Email: {registerModel.Email} is already in use."));
+
             //  Add user
             await _wpbService.CreateUserAsync(newUser, registerModel.Password);
+
+            //  Build new user token
+            var tokenString = GenerateToken(newUser);
+
+
+            // This is just a regular member so we don't need to create any claims
             //  Add user claim
-            var newClaim = new UserClaim()
+            /*var newClaim = new UserClaim()
             {
                 UserId = newUser.Id,
                 ClaimName = WpbClaims.ReadTeamData
-            };
+            };*/
 
-            await _wpbService.AddUserClaimAsync(newClaim);
+            return Ok(
+                new
+                {
+                    Id = newUser.Id.ToString(),
+                    newUser.Username,
+                    newUser.FirstName,
+                    newUser.Email,
+                    Token = tokenString
+                });
 
-            //  Should we not be returning the claim here
-            return Ok();
         }
 
-        private async Task<string> BuildTokenAsync(User user)
+        //  Old
+        /*private async Task<string> BuildTokenAsync(User user)
         {
             /*var claims = new[] {
                 //  Web Claim:  preferred_username
@@ -101,7 +127,7 @@ namespace WePlayBall.Controllers
                 new Claim(WpbClaims.ReadTeamData,"")
             };*/
 
-            var claims = new List<Claim>()
+            /*var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, user.Id.ToString())
             };
@@ -122,6 +148,27 @@ namespace WePlayBall.Controllers
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
             return tokenString;
+        }*/
+
+        private string GenerateToken(User user)
+        {
+            var claims = new Claim[] {
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
+                new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
+                new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddMonths(12)).ToUnixTimeSeconds().ToString()),
+            };
+            
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+                _config["Jwt:Issuer"],
+                claims.ToArray(),
+                expires: DateTime.UtcNow.AddMonths(12),// set expiry a year from now
+                signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
     }

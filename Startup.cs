@@ -64,7 +64,10 @@ namespace WePlayBall
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(WpbPolicy.PolicyReadTeamData, policy => policy.RequireClaim(WpbClaims.ReadTeamData));
+                options.AddPolicy(WpbPolicy.PolicyReadEditTeam, policy => policy.RequireClaim(WpbClaims.ReadEditTeam));
+                options.AddPolicy(WpbPolicy.PolicyReadEditTeamsAll, policy => policy.RequireClaim(WpbClaims.ReadEditTeamsAll));
+                options.AddPolicy(WpbPolicy.PolicyRunReadReportsAll, policy => policy.RequireClaim(WpbClaims.RunReadReportsAll));
+                options.AddPolicy(WpbPolicy.PolicyRunReadReportTeam, policy => policy.RequireClaim(WpbClaims.RunReadReportsTeam));
             });
 
 
@@ -104,7 +107,8 @@ namespace WePlayBall
 
             //  Register blog context with dependency injection
             services.AddDbContext<WPBDataContext>(options =>
-                options.UseSqlServer(Configuration["ConnectionStrings:WPBContextString"]));
+                options.UseSqlServer(Configuration["ConnectionStrings:WPBContextString"], 
+               opt => opt.EnableRetryOnFailure()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -143,6 +147,7 @@ namespace WePlayBall
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+
 
     }
 }
