@@ -23,13 +23,17 @@ namespace WePlayBall.Service
         private readonly SiteConfig _siteSettings;
         private readonly string _logoFolder;
         private readonly int _logoSize;
+        private readonly string _InstagramPhotos;
+        private readonly int _photoSize;
 
         public WPBService(WPBDataContext wpbDataContext, SiteConfig siteSettings, IHostingEnvironment env)
         {
             _wpbDataContext = wpbDataContext;
             _siteSettings = siteSettings;
             _logoFolder = Path.Combine(env.WebRootPath, "teamLogos");
+            _InstagramPhotos = Path.Combine(env.WebRootPath, "instagram");
             _logoSize = 100;
+            _photoSize = 1100;
         }
 
         //  Queries
@@ -499,6 +503,38 @@ namespace WePlayBall.Service
             return isUnique;
         }
 
+        public PagedResult<InstagramItem> GetInstgramFavsPageable(int? page)
+        {
+            var pageableDivisions = _wpbDataContext.InstagramItems
+                .OrderByDescending(x => x.Date)
+                .AsNoTracking()
+                .GetPaged(page ?? 1, int.Parse(_siteSettings.ItemsPerPage));
+
+            return pageableDivisions;
+        }
+
+        public async Task<bool> InstagramPhotoUnique(string imageSourceUrl)
+        {
+            var query = await _wpbDataContext.InstagramItems
+                .Where(x => x.Url == imageSourceUrl)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            var isUnique = (query == null);
+            return isUnique;
+        }
+
+        public async Task<List<InstaFavDto>> GetInstaFavAllAsync()
+        {
+            var query = await _wpbDataContext.InstagramItems
+                .Where( x => x.IsVideo == false)
+                .OrderByDescending(x => x.Date)
+                .Select(ModelHelpers.AsInstaFavDto)
+                .AsNoTracking().ToListAsync();
+
+            return query;
+        }
+
         //  Persistence
 
         public async Task CreateDivisionAsync(Division division)
@@ -646,6 +682,12 @@ namespace WePlayBall.Service
             await _wpbDataContext.SaveChangesAsync();
         }
 
+        public async Task CreateInstagramItemAsync(InstagramItem item)
+        {
+            _wpbDataContext.InstagramItems.Add(item);
+            await _wpbDataContext.SaveChangesAsync();
+        }
+
         public async Task<User> CreateUserAsync(User user, string password)
         {
             byte[] passwordHash, passwordSalt;
@@ -709,6 +751,57 @@ namespace WePlayBall.Service
 
                 //  add additional pictures
                 return  newFileName + ext;
+            });
+        }
+
+        public async Task<string> SaveInstagramPhotooAsync(IFormFile image, bool isVideo)
+        {
+            var imageFilename = "";
+
+            using (var ms = new MemoryStream())
+            {
+                image.CopyTo(ms);
+                var fileBytes = ms.ToArray();
+                imageFilename = await SaveInstagramFileAsync(fileBytes, image.FileName, isVideo).ConfigureAwait(true);
+            }
+
+            return imageFilename;
+        }
+
+        private async Task<string> SaveInstagramFileAsync(byte[] bytes, string filename, bool isVideo)
+        {
+            return await Task.Run<string>(() =>
+            {
+                var newFileName = DateTime.UtcNow.Ticks.ToString();
+
+                var ext = Path.GetExtension(filename);
+
+                var relative = $"{newFileName}{ext}";
+                var absolute = Path.Combine(_InstagramPhotos, relative);
+                var dir = Path.GetDirectoryName(absolute);
+
+                Directory.CreateDirectory(dir);
+
+                if (isVideo)
+                {
+                    // Save the uploaded file to "UploadedFiles" folder
+                    File.WriteAllBytesAsync(absolute, bytes).Wait();
+                }
+                else
+                {
+                    using (var image = new MagickImage(bytes))
+                    {
+                        //  set just the width to maintain aspect ratio
+                        image.Resize(_photoSize, 0);
+                        image.Write(absolute);
+
+                    }
+                }
+
+
+
+                //  add additional pictures
+                return newFileName + ext;
             });
         }
 

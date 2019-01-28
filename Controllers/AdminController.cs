@@ -709,6 +709,74 @@ namespace WePlayBall.Controllers
             return View(stats);
         }
 
+        [HttpGet]
+        public IActionResult AddInstagramItem()
+        {
+            var newItem = new InstagramItem();
+            return View(newItem);
+        }
+
+        // POST: Burgers/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddInstagramItem([Bind("Id,Date,UserId,Url,IsVideo")] InstagramItem item)
+        {
+            //   try parse date
+            try
+            {
+                item.Date = DateTime.Parse(item.Date.ToString());
+            }
+            catch (FormatException)
+            {
+                ModelState.AddModelError("", "Date in format: DD/MM/YYYY missing");
+                return View(item);
+            }
+
+            if (!ModelState.IsValid) return View(item);
+            var photoUnique = await _wpbService.InstagramPhotoUnique(item.Url);
+            if (!photoUnique)
+            {
+                ModelState.AddModelError("", $"The photo with link: {item.Url} already added.");
+                return View(item);
+            }
+
+
+            //  Picture required
+                if (HttpContext.Request.Form.Files.Count != 0)
+            {
+
+                var photo = HttpContext.Request.Form.Files[0];
+                //  yes
+                if (photo.Length > 0)
+                {
+                    var fileName = await _wpbService.SaveInstagramPhotooAsync(photo, item.IsVideo);
+                    item.Filename = fileName;
+                    await _wpbService.CreateInstagramItemAsync(item);
+                    return RedirectToAction(nameof(InstagramFavsAll));
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Image missing");
+                    return View();
+                }
+
+            }
+            else
+            {
+                ModelState.AddModelError("", "Image required");
+                return View();
+            }
+        }
+
+        public async Task<IActionResult> InstagramFavsAll(int? page)
+        {
+            // last stat report run
+            var results = _wpbService.GetInstgramFavsPageable(page);
+            return View(results);
+        }
+
         public async Task PurgeStatTable(IEnumerable<TeamStat> oldTeamStats)
         {
             if (oldTeamStats == null) return;
