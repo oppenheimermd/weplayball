@@ -70,6 +70,18 @@ namespace WePlayBall.Models.Helpers
                 WinPercentage = x.WinPercentage
             };
 
+        public static readonly Expression<Func<InstagramItem, InstaFavDto>> AsInstaFavDto =
+            x => new InstaFavDto()
+            {
+                Id = x.Id,
+                Date = x.Date,
+                InsagramUserId = x.UserId,
+                Url = x.Url,
+                Filename = x.Filename,
+                IsVideo = x.IsVideo,
+                InstagramUrl = x.GetImage()
+            };
+
         // Typed lambda expression for Select() method. 
         /*public static readonly Expression<Func<Division, DivisonDto>> AsDivisionDto =
             x => new DivisonDto

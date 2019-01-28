@@ -33,6 +33,7 @@ namespace WePlayBall.Data
             modelBuilder.Entity<User>().ToTable("User");
             modelBuilder.Entity<UserClaim>().ToTable("UserClaim");
             modelBuilder.Entity<ReportTracker>().ToTable("ReportTracker");
+            modelBuilder.Entity<InstagramItem>().ToTable("InstagramItem");
 
             modelBuilder.Entity<Team>()
                 .HasIndex(x => x.TeamCode)
@@ -45,6 +46,10 @@ namespace WePlayBall.Data
             
             modelBuilder.Entity<User>()
                 .HasIndex(x => x.Username)
+                .IsUnique();
+
+            modelBuilder.Entity<InstagramItem>()
+                .HasIndex(x => x.Url)
                 .IsUnique();
         }
 
@@ -61,5 +66,6 @@ namespace WePlayBall.Data
         public DbSet<User> Users { get; set; }
         public DbSet<UserClaim> UserClaims { get; set; }
         public DbSet<ReportTracker>ReportTracking { get; set; }
+        public DbSet<InstagramItem> InstagramItems { get; set; }
     }
 }

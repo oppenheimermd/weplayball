@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WePlayBall.Data;
 
 namespace weplayball.Migrations
 {
     [DbContext(typeof(WPBDataContext))]
-    partial class WPBDataContextModelSnapshot : ModelSnapshot
+    [Migration("20190125132954_Instagram_tbl_Update_Correction")]
+    partial class Instagram_tbl_Update_Correction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,8 +228,6 @@ namespace weplayball.Migrations
                     b.Property<DateTime>("Date");
 
                     b.Property<string>("Filename");
-
-                    b.Property<bool>("IsVideo");
 
                     b.Property<string>("Url")
                         .IsRequired();

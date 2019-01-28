@@ -272,6 +272,27 @@ namespace WePlayBall.Service
         /// <returns></returns>
         Task<bool> EmailUnique(string email);
 
+        /// <summary>
+        /// Get all <see cref="InstagramItem"/>(s) as pageable
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        PagedResult<InstagramItem> GetInstgramFavsPageable(int? page);
+
+        /// <summary>
+        /// Check if Image with instagram url is not in database.  link is in the
+        /// form of: https://www.instagram.com/p/BsvvIgCBjng/
+        /// </summary>
+        /// <param name="imageSourceUrl"></param>
+        /// <returns></returns>
+        Task<bool> InstagramPhotoUnique(string imageSourceUrl);
+
+        /// <summary>
+        /// Gets all <see cref="InstagramItem"/>. Currently exclued video favorites
+        /// </summary>
+        /// <returns></returns>
+        Task<List<InstaFavDto>> GetInstaFavAllAsync();
+
         //  Persistence
 
         /// <summary>
@@ -379,6 +400,13 @@ namespace WePlayBall.Service
         Task CreateReportHistory(ReportTracker reportTracker);
 
         /// <summary>
+        /// Create an instance of a <see cref="InstagramItem"/>
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        Task CreateInstagramItemAsync(InstagramItem item);
+
+        /// <summary>
         /// Create a <see cref="User"/>
         /// </summary>
         /// <param name="user"></param>
@@ -407,6 +435,14 @@ namespace WePlayBall.Service
         /// <param name="newFilename"></param>
         /// <returns></returns>
         Task<string> SaveTeamLogoAsync(IFormFile teamLogo, string newFilename);
+
+        /// <summary>
+        /// Create and resize(if photo) a <see cref="InstagramItem"/> photo
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="isVideo"></param>
+        /// <returns></returns>
+        Task<string> SaveInstagramPhotooAsync(IFormFile image, bool isVideo);
 
         //  Helpers
 
