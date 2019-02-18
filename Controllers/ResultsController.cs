@@ -1,7 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WePlayBall.Models;
 using WePlayBall.Models.DTO;
 using WePlayBall.Service;
 using WePlayBall.Settings;
@@ -25,7 +29,6 @@ namespace WePlayBall.Controllers
 
         //  Get all results
         // GET: api/Results
-        //[Authorize(Policy = WpbPolicy.PolicyReadTeamData)]
         [HttpGet]
         public IActionResult GetAllResults()
         {
@@ -41,5 +44,56 @@ namespace WePlayBall.Controllers
 
             return Ok(filteredRequest);
         }
+
+        //  /api/teams/[teamCode]
+        [HttpGet("/results/standings", Name = "TeamStandings")]
+        public async Task<IActionResult> GetTeamStandings()
+        {
+
+            var allStandings = new List<StandingsBySubdivisionDto>();
+
+            var subDivisions = await _wpbService.GetSubDivisionAllAsync();
+            foreach (var subDivision in subDivisions)
+            {
+                //  Get the ranking info for this subdivision
+                var subDivStats = await _wpbService.GetTeamsStatsDtoBySubDivisionAsync(subDivision.Id);
+
+                var standingBySubdivision = new StandingsBySubdivisionDto()
+                {
+                    SubDivisionTitle = subDivision.SubDivisionTitle,
+                    SubDivisionCode = subDivision.SubDivisionCode,
+                    DivisionName = subDivision.Division.DivisionName,
+                    DivisionCode = subDivision.Division.DivisionCode,
+                    Division = GetNumericalDivision(subDivision.Division.DivisionCode),
+                    SubDivisionStats = subDivStats
+                };
+                allStandings.Add(standingBySubdivision);
+            };
+
+            allStandings = allStandings.OrderByDescending(x => x.Division).ToList();
+            return Ok(allStandings);
+        }
+
+        public int GetNumericalDivision(string divCode)
+        {
+            var caseSwitch = divCode;
+
+            switch (caseSwitch)
+            {
+                case "DIV1":
+                    return 1;
+                case "DIV2":
+                    return 2;
+                case "DIV3":
+                    return 3;
+                default:
+                    throw new InvalidOperationException("Division code not found");
+            }
+        }
+
     }
+
+
+
+
 }

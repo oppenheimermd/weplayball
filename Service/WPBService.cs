@@ -73,6 +73,17 @@ namespace WePlayBall.Service
             return pageableSubDivisions;
         }
 
+        public async Task<List<SubDivision>> GetSubDivisionAllAsync()
+        {
+            var query = await _wpbDataContext.SubDivisions
+                .Include("Division")
+                .OrderByDescending(x => x.SubDivisionTitle)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return query;
+        }
+
         public async Task<SubDivision> GetSubDivisionAsync(int? id)
         {
             var subDivision = await _wpbDataContext.SubDivisions
@@ -422,7 +433,7 @@ namespace WePlayBall.Service
         }
          */
 
-
+        
         public async Task<List<TeamStat>> GetTeamsStatsBySubDivisionAsync(int subDivId)
         {
 
@@ -435,6 +446,22 @@ namespace WePlayBall.Service
 
             return results;
         }
+
+        public async Task<List<TeamStatDto>> GetTeamsStatsDtoBySubDivisionAsync(int subDivId)
+        {
+
+            var results = await _wpbDataContext.TeamStats
+                .Include(x => x.SubDivision)
+                .ThenInclude(subdivision => subdivision.Division)
+                .Where(x => x.SubDivision.Id == subDivId)
+                .OrderBy(x => x.Position)
+                .Select(ModelHelpers.AsTeamStatDto)
+                .AsNoTracking().ToListAsync();
+
+            return results;
+        }
+
+
 
 
         public async Task<IEnumerable<TeamStat>> GetStatsAllAsync()

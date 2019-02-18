@@ -26,7 +26,8 @@ namespace weplayball.Controllers
 
         // GET: api/instafavs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<InstaFavDto>>> GetTeams()
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<InstaFavDto>>> GetFavorites()
         {
             return await _wpbService.GetInstaFavAllAsync();
         }

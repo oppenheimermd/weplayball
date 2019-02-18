@@ -10,9 +10,9 @@ namespace WePlayBall.Models.Helpers
         /// <param name="wins"></param>
         /// <param name="games"></param>
         /// <returns></returns>
-        public static decimal WinPercentage(int wins, int games)
+        public static decimal WinPercentage(decimal wins, decimal games)
         {
-            var calculation = (wins / games) * 100;
+            var calculation = (wins / games);
             var result = decimal.Round(calculation, 3);
             return result;
         }
@@ -23,7 +23,7 @@ namespace WePlayBall.Models.Helpers
         /// <param name="losses"></param>
         /// <param name="games"></param>
         /// <returns></returns>
-        public static decimal LossPercentage(int losses, int games)
+        public static decimal LossPercentage(decimal losses, decimal games)
         {
             var calculation = (losses / games) * 100;
             var result = decimal.Round(calculation, 3);
@@ -36,7 +36,7 @@ namespace WePlayBall.Models.Helpers
         /// <param name="basketsFor"></param>
         /// <param name="games"></param>
         /// <returns></returns>
-        public static decimal BasketsPerGame(int basketsFor, int games)
+        public static decimal BasketsPerGame(decimal basketsFor, decimal games)
         {
             var calculation = (basketsFor / games);
             var result = decimal.Round(calculation, 1);
@@ -45,7 +45,7 @@ namespace WePlayBall.Models.Helpers
 
         //  W-L% - Won - Loss percentage
         //  https://www.basketball-reference.com/about/glossary.html
-        public static decimal WinLossPercentage(int wins, int losses)
+        public static decimal WinLossPercentage(decimal wins, decimal losses)
         {
             var calculation = wins / (wins + losses);
             var result = decimal.Round(calculation, 3);
@@ -58,7 +58,7 @@ namespace WePlayBall.Models.Helpers
         /// <param name="wins"></param>
         /// <param name="losses"></param>
         /// <returns></returns>
-        public static decimal WinsOver50(int wins, int losses)
+        public static decimal WinsOver50(decimal wins, decimal losses)
         {
             var calculation = (wins - losses) / 2;
             var result = decimal.Round(calculation, 3);
