@@ -33,7 +33,7 @@ namespace WePlayBall.Models.DTO
 
         public int BasketsFor { get; set; }
 
-        public int BasketsAganist { get; set; }
+        public int BasketsAgainst { get; set; }
 
         public int PointsDifference { get; set; }
 

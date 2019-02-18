@@ -29,7 +29,12 @@ namespace WePlayBall.Models.Helpers
                 DivisionName = x.SubDivision.Division.DivisionName,
                 DivisionCode = x.SubDivision.Division.DivisionCode,
                 SubDivisionTitle = x.SubDivision.SubDivisionTitle,
-                SubDivisionCode = x.SubDivision.SubDivisionCode
+                SubDivisionCode = x.SubDivision.SubDivisionCode,
+                Website = x.Website,
+                Address = x.Address,
+                PostCode = x.PostCode,
+                HasLogo = x.HasLogo,
+                Logo = x.LogolUrl()
             };
 
         public static readonly Expression<Func<Fixture, FixturesDto>> AsFixtureDto =
@@ -59,7 +64,7 @@ namespace WePlayBall.Models.Helpers
                 GamesWon = x.GamesWon,
                 GamesLost = x.GamesLost,
                 BasketsFor = x.BasketsFor,
-                BasketsAganist = x.BasketsAganist,
+                BasketsAgainst = x.BasketsAganist,
                 PointsDifference = x.PointsDifference,
                 Points = x.Points,
                 WPyth = x.WPyth,

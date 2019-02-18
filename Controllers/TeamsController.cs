@@ -47,7 +47,8 @@ namespace WePlayBall.Controllers
             
             if (team != null && teamStats != null)
             {
-                team.TeamStatDto = teamStats;
+                //team.TeamStatDto = teamStats;
+                team = AddTeamStat(teamStats, team);
                 return Ok(team);
             }
             else
@@ -56,7 +57,25 @@ namespace WePlayBall.Controllers
             }
         }
 
+        private TeamDto AddTeamStat(TeamStatDto stat, TeamDto team)
+        {
+            team.Position = stat.Position;
+            team.GamesPlayed = stat.GamesPlayed;
+            team.GamesWon = stat.GamesWon;
+            team.GamesLost = stat.GamesLost;
+            team.BasketsFor = stat.BasketsFor;
+            team.BasketsAganist = stat.BasketsAgainst;
+            team.PointsDifference = stat.PointsDifference;
+            team.Points = stat.Points;
+            team.WPyth = stat.WPyth;
+            team.WinsOver500 = stat.WinsOver500;
+            team.WinLossPercent = stat.WinLossPercent;
+            team.BasketsPerGame = stat.BasketsPerGame;
+            team.LossPercentage = stat.LossPercentage;
+            team.WinPercentage = stat.WinPercentage;
 
+            return team;
+        }
 
     }
 }

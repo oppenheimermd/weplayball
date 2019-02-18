@@ -43,6 +43,12 @@ namespace WePlayBall.Service
         PagedResult<SubDivision> GetSubDivisionsPageable(int? page);
 
         /// <summary>
+        /// Get all <see cref="SubDivision"/>(s) 
+        /// </summary>
+        /// <returns></returns>
+        Task<List<SubDivision>> GetSubDivisionAllAsync();
+
+        /// <summary>
         /// Get and instance of a <see cref="SubDivision"/> entity.  Includes <see cref="Division"/>
         /// </summary>
         /// <param name="id"></param>
@@ -232,6 +238,13 @@ namespace WePlayBall.Service
         /// <param name="subDivId"></param>
         /// <returns></returns>
         Task<List<TeamStat>> GetTeamsStatsBySubDivisionAsync(int subDivId);
+
+        /// <summary>
+        /// Get all <see cref="TeamStatDto"/> for <see cref="SubDivision"/> as List(TeamStatDto).
+        /// </summary>
+        /// <param name="subDivId"></param>
+        /// <returns></returns>
+        Task<List<TeamStatDto>> GetTeamsStatsDtoBySubDivisionAsync(int subDivId);
 
         /// <summary>
         /// Get all <see cref="TeamStat"/>(s) Async
