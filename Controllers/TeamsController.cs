@@ -44,11 +44,15 @@ namespace WePlayBall.Controllers
 
             var team = await _wpbService.GetTeamByTeamCodeDto(teamCode);
             var teamStats = await _wpbService.GetTeamStat(teamCode);
-            
+            var teamSubdivision = team.SubDivisionCode;
+            var subDivCount = await _wpbService.GetSubDivisionCountAsync(teamSubdivision);
+
+
             if (team != null && teamStats != null)
             {
                 //team.TeamStatDto = teamStats;
                 team = AddTeamStat(teamStats, team);
+                team.SubDivisionCount = subDivCount;
                 return Ok(team);
             }
             else

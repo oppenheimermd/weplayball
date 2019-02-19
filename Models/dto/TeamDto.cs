@@ -58,6 +58,8 @@
         public string LossPercentage { get; set; }
 
         public string WinPercentage { get; set; }
+
+        public int SubDivisionCount { get; set; }
     }
 }
 

@@ -56,6 +56,13 @@ namespace WePlayBall.Service
         Task<SubDivision> GetSubDivisionAsync(int? id);
 
         /// <summary>
+        /// Get total count of <see cref="SubDivision"/>
+        /// </summary>
+        /// <param name="subDivisionCode"></param>
+        /// <returns></returns>
+        Task<int> GetSubDivisionCountAsync(string subDivisionCode);
+
+        /// <summary>
         /// Get <see cref="Team"/>(s) as pageable.  Includes <see cref="Division"/> and <see cref="SubDivision"/>
         /// </summary>
         /// <param name="page"></param>
@@ -306,6 +313,13 @@ namespace WePlayBall.Service
         /// <returns></returns>
         Task<List<InstaFavDto>> GetInstaFavAllAsync();
 
+        /// <summary>
+        /// Get an instance of <see cref="InstagramItem"/> item
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<InstagramItem> GetInstagramItemAsync(int id);
+
         //  Persistence
 
         /// <summary>
@@ -440,6 +454,13 @@ namespace WePlayBall.Service
         /// <param name="teamStat"></param>
         /// <returns></returns>
         Task DeleteTeamStatAsync(TeamStat teamStat);
+
+        /// <summary>
+        /// Delete an instance of a <see cref="InstagramItem"/> - Does not remove file
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        Task DeleteInstagramItemtAsync(InstagramItem item);
 
         /// <summary>
         /// Create and resize a <see cref="Team"/>(s) logo
