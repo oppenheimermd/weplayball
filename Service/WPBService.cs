@@ -94,6 +94,21 @@ namespace WePlayBall.Service
             return subDivision;
         }
 
+        public async Task<int> GetSubDivisionCountAsync(string subDivisionCode)
+        {
+            var count = 0;
+            var subDivCode = subDivisionCode.ToUpper();
+
+            var query = await _wpbDataContext.SubDivisions
+                .Include("Division")
+                .Where(x => x.SubDivisionCode == subDivCode)
+                .AsNoTracking().ToListAsync();
+
+            count = query.Count;
+            return count;
+
+        }
+
         public PagedResult<Team> GetTeamsPageable(int? page)
         {
             var pageableTeam = _wpbDataContext.Teams
@@ -386,8 +401,8 @@ namespace WePlayBall.Service
         public List<GameResultDto> GetResultsAsDto()
         {
             var timestampNow = DateTime.Now;
-            //  We only want the "last" seven days
-            var timestampSeven = timestampNow.AddDays(-7);
+            //  We only want the "last" 14days
+            var timestampSeven = timestampNow.AddDays(-14);
 
             var query = (from g in _wpbDataContext.GameResults
                 where g.TimeStamp >= timestampSeven
@@ -558,6 +573,16 @@ namespace WePlayBall.Service
                 .OrderByDescending(x => x.Date)
                 .Select(ModelHelpers.AsInstaFavDto)
                 .AsNoTracking().ToListAsync();
+
+            return query;
+        }
+
+        public async Task<InstagramItem> GetInstagramItemAsync(int id)
+        {
+            var query = await _wpbDataContext.InstagramItems
+                .Where( x => x.Id == id)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
 
             return query;
         }
@@ -739,6 +764,13 @@ namespace WePlayBall.Service
         {
             var query = await _wpbDataContext.TeamStats.FindAsync(teamStat.Id);
             _wpbDataContext.TeamStats.Remove(query);
+            await _wpbDataContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteInstagramItemtAsync(InstagramItem item)
+        {
+            var resultToDelete = await _wpbDataContext.InstagramItems.FindAsync(item.Id);
+            _wpbDataContext.InstagramItems.Remove(resultToDelete);
             await _wpbDataContext.SaveChangesAsync();
         }
 

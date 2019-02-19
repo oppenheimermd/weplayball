@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -722,14 +723,16 @@ namespace WePlayBall.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddInstagramItem([Bind("Id,Date,UserId,Url,IsVideo")] InstagramItem item)
-        {
+        {            
             //   try parse date
             try
             {
-                item.Date = DateTime.Parse(item.Date.ToString());
+                //item.Date = DateTime.Parse(item.Date.ToString());
+                item.Date = DateTime.ParseExact(item.Date.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
             }
-            catch (FormatException)
+            catch (FormatException exp)
             {
+                var exception = exp.ToString();
                 ModelState.AddModelError("", "Date in format: DD/MM/YYYY missing");
                 return View(item);
             }
@@ -770,12 +773,31 @@ namespace WePlayBall.Controllers
             }
         }
 
-        public async Task<IActionResult> InstagramFavsAll(int? page)
+        public IActionResult InstagramFavsAll(int? page)
         {
             // last stat report run
             var results = _wpbService.GetInstgramFavsPageable(page);
             return View(results);
         }
+
+        public async Task<IActionResult> DeleteInstagramItem(int? id)
+        {
+            if(!id.HasValue)
+                return NotFound();
+
+            var item = await _wpbService.GetInstagramItemAsync(id.Value);
+            if(item != null)
+            {
+                await _wpbService.DeleteInstagramItemtAsync(item);
+                return RedirectToAction(nameof(InstagramFavsAll));
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+
 
         public async Task PurgeStatTable(IEnumerable<TeamStat> oldTeamStats)
         {
