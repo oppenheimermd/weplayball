@@ -77,6 +77,7 @@ namespace WePlayBall.Controllers
             team.BasketsPerGame = stat.BasketsPerGame;
             team.LossPercentage = stat.LossPercentage;
             team.WinPercentage = stat.WinPercentage;
+            team.SubDivisionTitle = stat.SubDivisionName;
 
             return team;
         }
