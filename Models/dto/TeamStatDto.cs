@@ -20,6 +20,8 @@ namespace WePlayBall.Models.DTO
 
         public int SubDivisionId { get; set; }
 
+        public string SubDivisionName { get; set; }
+
         /// <summary>
         /// Rank position
         /// </summary>
