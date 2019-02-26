@@ -99,12 +99,17 @@ namespace WePlayBall.Service
             var count = 0;
             var subDivCode = subDivisionCode.ToUpper();
 
-            var query = await _wpbDataContext.SubDivisions
+            var subdivision = await _wpbDataContext.SubDivisions
                 .Include("Division")
-                .Where(x => x.SubDivisionCode == subDivCode)
+                .AsNoTracking()
+                .FirstOrDefaultAsync( x => x.SubDivisionCode == subDivCode);
+
+            var query = await _wpbDataContext.Teams
+                .Include("SubDivision")
+                .Where(x => x.SubDivisionId == subdivision.Id)
                 .AsNoTracking().ToListAsync();
 
-            count = query.Count;
+            count = (query.Count <= 0 )? 0 : query.Count;
             return count;
 
         }
