@@ -60,6 +60,8 @@
         public string WinPercentage { get; set; }
 
         public int SubDivisionCount { get; set; }
+
+        public FixturesDto TeamNextMatch { get; set; }
     }
 }
 

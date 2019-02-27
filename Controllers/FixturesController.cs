@@ -28,7 +28,7 @@ namespace WePlayBall.Controllers
         public IActionResult GetAllFixtures()
         {
 
-            var fixtures = _wpbService.GetFixturesAsDtoAsync();
+            var fixtures = _wpbService.GetFixturesAsDto();
 
             var filteredRequest = new FixtureGroupedRequestDto
             {

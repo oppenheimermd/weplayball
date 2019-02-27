@@ -243,7 +243,7 @@ namespace WePlayBall.Service
             return fixtures;
         }*/
 
-        public List<FixturesDto> GetFixturesAsDtoAsync()
+        public List<FixturesDto> GetFixturesAsDto()
         {
             var timestampNow = DateTime.Now;
             var timestampSeven = timestampNow.AddDays(7);
@@ -270,6 +270,35 @@ namespace WePlayBall.Service
                     SubDivision = subDiv.SubDivisionTitle,
                     SubDivisionCode = subDiv.SubDivisionCode
                 });
+
+            return query.ToList();
+        }
+
+        public List<FixturesDto> GetFixturesAsDtoAll()
+        {
+
+            var query = (from f in _wpbDataContext.Fixtures
+                         //where f.FixtureDate >= timestampNow && f.FixtureDate <= timestampSeven
+                         join homeTeam in _wpbDataContext.Teams on f.HomeTeamId equals homeTeam.Id
+                         join awayTeam in _wpbDataContext.Teams on f.AwayTeamId equals awayTeam.Id
+                         join subDiv in _wpbDataContext.SubDivisions on f.SubDivisionId equals subDiv.Id
+                         join div in _wpbDataContext.Divisions on subDiv.DivisionId equals div.Id
+                         select new FixturesDto
+                         {
+                             FixtureDate = f.FixtureDate,
+                             HomeTeamName = homeTeam.TeamName,
+                             HomeTeamCode = homeTeam.TeamCode,
+                             HomeTeamHasLogo = homeTeam.HasLogo,
+                             HomeTeamLogo = FixturesDto.GetLogolUrl(homeTeam.Logo),
+                             AwayTeamName = awayTeam.TeamName,
+                             AwayTeamCode = awayTeam.TeamCode,
+                             AwayTeamHasLogo = awayTeam.HasLogo,
+                             AwayTeamLogo = FixturesDto.GetLogolUrl(awayTeam.Logo),
+                             Division = div.DivisionName,
+                             DivisionCode = div.DivisionCode,
+                             SubDivision = subDiv.SubDivisionTitle,
+                             SubDivisionCode = subDiv.SubDivisionCode
+                         });
 
             return query.ToList();
         }
