@@ -32,7 +32,7 @@ namespace WePlayBall.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Login(string returnUrl = null)
+        public IActionResult Login(string returnUrl = null)
         {
             // If the user is already authenticated we do not need to display the login page, so we redirect to the landing page. 
             if (User.Identity.IsAuthenticated)

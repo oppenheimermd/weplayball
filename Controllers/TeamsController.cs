@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -47,12 +48,25 @@ namespace WePlayBall.Controllers
             var teamSubdivision = team.SubDivisionCode;
             var subDivCount = await _wpbService.GetSubDivisionCountAsync(teamSubdivision);
 
+            var nextFixture = Task.Run<FixturesDto>(() =>
+            {
+                var query = _wpbService.GetFixturesAsDtoAll();
+                var filter = query.Where(x => (x.AwayTeamCode == team.TeamCode ||
+                x.HomeTeamCode == team.TeamCode) && x.FixtureDate >= System.DateTime.Now.Date)
+                .OrderBy(x => x.FixtureDate).ToList();
+                var entity = (filter.Count >= 1) ? filter[0] : null;
+                return entity;
+            });
+
+            nextFixture.Wait();
+
+
 
             if (team != null && teamStats != null)
             {
-                //team.TeamStatDto = teamStats;
                 team = AddTeamStat(teamStats, team);
                 team.SubDivisionCount = subDivCount;
+                team.TeamNextMatch = nextFixture.Result;
                 return Ok(team);
             }
             else

@@ -27,7 +27,7 @@ namespace WePlayBall.Controllers
         }
 
         [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
-        public async Task<IActionResult> Index(int? page)
+        public IActionResult Index(int? page)
         {
 
             //await GetFixturesDataAsync();
@@ -46,12 +46,14 @@ namespace WePlayBall.Controllers
 
         //  Division
 
+        [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
         public IActionResult DivisionsAll(int? page)
         {
             var divisions = _wpbService.GetDivisionsPageable(page);
             return View(divisions);
         }
 
+        [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
         public async Task<IActionResult> DivisionDetails(int? id)
         {
             if (id == null)
@@ -68,6 +70,7 @@ namespace WePlayBall.Controllers
             return View(division);
         }
 
+        [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
         public IActionResult DivisionCreate()
         {
             return View();
@@ -77,6 +80,7 @@ namespace WePlayBall.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
         public async Task<IActionResult> DivisionCreate([Bind("Id,DivisionName,DivisionCode")] Division division)
         {
             if (!ModelState.IsValid) return View(division);
@@ -89,6 +93,7 @@ namespace WePlayBall.Controllers
         }
 
         // GET: Admin/DivisionEdit/5
+        [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
         public async Task<IActionResult> DivisionEdit(int? id)
         {
             if (id == null)
@@ -110,6 +115,7 @@ namespace WePlayBall.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
         public async Task<IActionResult> DivisionEdit(int id, [Bind("Id,DivisionName,DivisionCode")] Division division)
         {
             if (id != division.Id)
@@ -128,7 +134,7 @@ namespace WePlayBall.Controllers
         }
 
         //  Sub division
-
+        [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
         public IActionResult SubDivisionsAll(int? page)
         {
             var subdivisions = _wpbService.GetSubDivisionsPageable(page);

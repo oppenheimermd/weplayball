@@ -147,7 +147,13 @@ namespace WePlayBall.Service
         /// </summary>
         /// <returns></returns>
         //Task<IEnumerable<FixturesDto>> GetFixturesAsDtoAsync();
-        List<FixturesDto> GetFixturesAsDtoAsync();
+        List<FixturesDto> GetFixturesAsDto();
+
+        /// <summary>
+        /// Get all <see cref="Fixture"/>(s) as Dto.  Includes past fixtures as well
+        /// </summary>
+        /// <returns></returns>
+        List<FixturesDto> GetFixturesAsDtoAll();
 
         /// <summary>
         /// Add team logos to <see cref="FixturesDto"/> request
