@@ -1,0 +1,63 @@
+﻿@model WePlayBall.Models.InstagramItem
+@{
+    ViewData["Title"] = "AddInstagramItem";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section DefaultHeader{
+    <ul class="uk-breadcrumb">
+        <li>
+            <a asp-controller="Admin" asp-action="Index">All</a>
+        </li>
+        <li>
+            <span href="">Edit Instagram Photo</span>
+        </li>
+    </ul>
+}
+
+<form asp-action="EditInstagramPhoto">
+    <fieldset class="uk-fieldset">
+        <legend class="uk-legend">Edit team</legend>
+        <div asp-validation-summary="ModelOnly" class="uk-form-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <div class="uk-margin">
+            <input asp-for="Date" class="uk-input" placeholder="Date in format: 16/02/2020" />
+            <span asp-validation-for="Date" class="uk-form-danger"></span>
+        </div>
+
+        <div class="uk-margin">
+            <input asp-for="UserId" class="uk-input" placeholder="Instagram userId" />
+            <span asp-validation-for="UserId" class="uk-form-danger"></span>
+        </div>
+
+        <div class="uk-margin">
+            <input asp-for="Url" class="uk-input" placeholder="Instagram item url" />
+            <span asp-validation-for="Url" class="uk-form-danger"></span>
+        </div>
+
+        <div class="uk-margin">
+            Video @Html.RadioButtonFor(model => model.IsVideo, true, new { @class = "uk-radio" })
+            <span asp-validation-for="IsVideo" class="uk-form-danger"></span>
+        </div>
+
+
+        <div class="uk-margin">
+            <div uk-form-custom="target: true">
+                <input type="file" name="InstagramImage" id="InstagramImage">
+                <input class="uk-input" type="text" placeholder="Select file" disabled>
+            </div>
+        </div>
+
+        <div class="uk-margin">
+            <input type="submit" value="Submit" class="uk-button uk-button-primary" />
+        </div>
+
+    </fieldset>
+</form>
+
+<div>
+    <a asp-controller="Admin" asp-action="InstagramFavsAll">Back to List</a>
+</div>
+
+

@@ -786,6 +786,25 @@ namespace WePlayBall.Controllers
             return View(results);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> EditInstagramPhoto(int? id)
+        {
+            if(!id.HasValue)
+                return NotFound();
+
+            var item = await _wpbService.GetInstagramItemAsync(id.Value);
+            if (item != null)
+            {
+                await _wpbService.DeleteInstagramItemtAsync(item);
+                return View(item);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+
         public async Task<IActionResult> DeleteInstagramItem(int? id)
         {
             if(!id.HasValue)

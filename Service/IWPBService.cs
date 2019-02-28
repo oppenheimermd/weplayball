@@ -240,10 +240,17 @@ namespace WePlayBall.Service
         Task<IEnumerable<UserClaim>> GetUserClaimsAsync(Guid userId);
 
         /// <summary>
-        /// Get all <see cref="GameResult"/>(s) as a list of <see cref="GameResultDto"/>
+        /// Get latest <see cref="GameResult"/>(s) as a list of <see cref="GameResultDto"/> in a
+        /// specified timespan
         /// </summary>
         /// <returns></returns>
         List<GameResultDto> GetResultsAsDto();
+
+        /// <summary>
+        /// Get all <see cref="GameResult"/>(s) as a list of <see cref="GameResultDto"/>
+        /// </summary>
+        /// <returns></returns>
+        List<GameResultDto> GetResultsAsDtoAll();
 
         /// <summary>
         /// Get all <see cref="TeamStat"/>(s) by <see cref="SubDivision"/> as list
