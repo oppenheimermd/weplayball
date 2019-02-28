@@ -60,13 +60,24 @@ namespace WePlayBall.Controllers
 
             nextFixture.Wait();
 
+            var lastResult = Task.Run<GameResultDto>(() =>
+           {
+               var query = _wpbService.GetResultsAsDtoAll();
+               var filter = query.Where(x => x.AwayTeamCode == team.TeamCode ||
+              x.HomeTeamCode == team.TeamCode)
+               .OrderBy(x => x.TimeStamp).ToList();
+               var entity = (filter.Count >= 1) ? filter[0] : null;
+               return entity;
+           });
 
+            lastResult.Wait();
 
             if (team != null && teamStats != null)
             {
                 team = AddTeamStat(teamStats, team);
                 team.SubDivisionCount = subDivCount;
                 team.TeamNextMatch = nextFixture.Result;
+                team.TeamLastResult = lastResult.Result;
                 return Ok(team);
             }
             else

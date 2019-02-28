@@ -62,6 +62,8 @@
         public int SubDivisionCount { get; set; }
 
         public FixturesDto TeamNextMatch { get; set; }
+
+        public GameResultDto TeamLastResult { get; set; }
     }
 }
 
