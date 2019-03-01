@@ -239,13 +239,14 @@ namespace WePlayBall.Controllers
         }
 
         //  Teams
-
+        [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
         public IActionResult TeamsAll(int? page)
         {
             var teams = _wpbService.GetTeamsPageable(page);
             return View(teams);
         }
 
+        [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
         public async Task<IActionResult> TeamDetails(int? id)
         {
             if (id == null)
@@ -262,6 +263,7 @@ namespace WePlayBall.Controllers
             return View(team);
         }
 
+        [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
         public async Task<IActionResult> TeamCreate()
         {
             var divisionList = await _wpbService.GetSubDivisionDropListAsync();
@@ -273,6 +275,7 @@ namespace WePlayBall.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
         public async Task<IActionResult> TeamCreate([Bind("Id,TeamName,TeamCode,SubDivisionId")]
             Team team)
         {
@@ -300,6 +303,7 @@ namespace WePlayBall.Controllers
         }
 
         // GET: Admin/TeamEditEdit/5
+        [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
         public async Task<IActionResult> TeamEdit(int? id)
         {
             if (id == null)
@@ -323,7 +327,8 @@ namespace WePlayBall.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> TeamEdit(int id, [Bind("Id,TeamName,TeamCode,SubDivisionId, Address,PostCode,Website")]
+        [Authorize(Policy = WpbPolicy.PolicyReadEditTeamsAll)]
+        public async Task<IActionResult> TeamEdit(int id, [Bind("Id,TeamName,TeamCode,SubDivisionId, Address,PostCode,Website,About")]
             Team team)
         {
             if (id != team.Id)
@@ -333,6 +338,22 @@ namespace WePlayBall.Controllers
 
             //  once season is in season is in session no changes to team code
             //team.TeamCode = team.TeamCode.ToUpper();
+
+            //  Get Team
+            var thisTeam = await _wpbService.GetTeamAsync(id);
+            if(thisTeam == null)
+                return NotFound();
+
+
+            // update the premited value passed in only:
+            //  Address,PostCode,Website,About
+            thisTeam.About = ModelHelpers.ShortenAndFormatText(team.About, 200);
+            //  because we are manually changing the values of about:
+            ModelState.Remove("About");
+            thisTeam.Address = team.Address;
+            thisTeam.PostCode = team.PostCode;
+            thisTeam.Website = team.Website;
+            
 
             if (!ModelState.IsValid)
             {
@@ -368,7 +389,7 @@ namespace WePlayBall.Controllers
                 return NotFound();
             }
 
-            var editSuccess = await _wpbService.UpdateTeamAsync(team);
+            var editSuccess = await _wpbService.UpdateTeamAsync(thisTeam);
             if (editSuccess)
             {
                 return RedirectToAction(nameof(TeamsAll));

@@ -18,6 +18,8 @@
 
         public string PostCode { get; set; }
 
+        public string About { get; set; }
+
         public bool HasLogo { get; set; }
 
         public string Logo { get; set; }
