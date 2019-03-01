@@ -21,6 +21,8 @@
         <legend class="uk-legend">Edit team</legend>
         <div asp-validation-summary="ModelOnly" class="uk-form-danger"></div>
         <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="HasLogo" />
+        <input type="hidden" asp-for="Logo" />
 
         <div class="uk-margin">
             <input asp-for="TeamName" class="uk-input" placeholder="Team name" />
@@ -40,17 +42,22 @@
             <input asp-for="Address" class="uk-input" placeholder="Team Address" />
             <span asp-validation-for="Address" class="uk-form-danger"></span>
         </div>
-        
+
+        <div class="uk-margin">
+            <textarea asp-for="About" class="uk-textarea" rows="5" placeholder="About"></textarea>
+            <span asp-validation-for="Address" class="uk-form-danger"></span>
+        </div>
+
         <div class="uk-margin">
             <input asp-for="PostCode" class="uk-input" placeholder="PostCode" />
             <span asp-validation-for="PostCode" class="uk-form-danger"></span>
         </div>
-        
+
         <div class="uk-margin">
             <input asp-for="Website" class="uk-input" placeholder="Website" />
             <span asp-validation-for="Website" class="uk-form-danger"></span>
         </div>
-        
+
         <div class="uk-margin">
             <a asp-action="AddTeamLogo" asp-controller="Admin" asp-route-id="@Model.Id">Edit Logo</a>
         </div>

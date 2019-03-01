@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WePlayBall.Data;
 
 namespace weplayball.Migrations
 {
     [DbContext(typeof(WPBDataContext))]
-    partial class WPBDataContextModelSnapshot : ModelSnapshot
+    [Migration("20190301154222_TBl_Team_About")]
+    partial class TBl_Team_About
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -289,7 +291,7 @@ namespace weplayball.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("About")
-                        .HasMaxLength(240);
+                        .HasMaxLength(200);
 
                     b.Property<string>("Address")
                         .HasMaxLength(200);

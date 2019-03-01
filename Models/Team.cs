@@ -37,6 +37,9 @@ namespace WePlayBall.Models
         public string Address { get; set; }
 
         public string PostCode { get; set; }
+        
+        [StringLength(240, ErrorMessage = "240 characters maximum")]
+        public string About { get; set; }
 
         public bool HasLogo { get; set; }
 
