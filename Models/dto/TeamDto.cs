@@ -1,4 +1,6 @@
-﻿namespace WePlayBall.Models.DTO
+﻿using System.Collections.Generic;
+
+namespace WePlayBall.Models.DTO
 {
     public class TeamDto
     {
@@ -66,6 +68,8 @@
         public FixturesDto TeamNextMatch { get; set; }
 
         public GameResultDto TeamLastResult { get; set; }
+
+        public List<TeamExtraLightDto> Peers { get; set; }
     }
 }
 

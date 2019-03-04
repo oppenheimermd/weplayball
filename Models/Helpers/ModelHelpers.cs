@@ -38,6 +38,13 @@ namespace WePlayBall.Models.Helpers
                 Logo = x.LogolUrl()
             };
 
+        public static readonly Expression<Func<Team, TeamExtraLightDto>> AsTeamExtraLightDto =
+            x => new TeamExtraLightDto
+            {
+                TeamName = x.TeamName,
+                TeamCode = x.TeamCode,
+            };
+
         public static readonly Expression<Func<Fixture, FixturesDto>> AsFixtureDto =
             x => new FixturesDto()
             {

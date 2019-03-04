@@ -47,6 +47,11 @@ namespace WePlayBall.Controllers
             var teamStats = await _wpbService.GetTeamStat(teamCode);
             var teamSubdivision = team.SubDivisionCode;
             var subDivCount = await _wpbService.GetSubDivisionCountAsync(teamSubdivision);
+            //  get all teams in this subdivision
+            var teamPeers = await _wpbService.GetTeamsBySubDivisionAllAsync(team.SubDivisionCode);
+            //  Remove the team with the teamCode passed in
+            var teamSelf = teamPeers.FirstOrDefault(x => x.TeamCode == teamCode);
+            teamPeers.Remove(teamSelf);
 
             var nextFixture = Task.Run<FixturesDto>(() =>
             {
@@ -78,6 +83,7 @@ namespace WePlayBall.Controllers
                 team.SubDivisionCount = subDivCount;
                 team.TeamNextMatch = nextFixture.Result;
                 team.TeamLastResult = lastResult.Result;
+                team.Peers = teamPeers;
                 return Ok(team);
             }
             else
