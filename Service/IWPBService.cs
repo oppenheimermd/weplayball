@@ -219,6 +219,14 @@ namespace WePlayBall.Service
         PagedResult<Team> GetTeamsBySubDivisionPageable(int? page, int Id);
 
         /// <summary>
+        /// Get all teams by <see cref="SubDivision"/>Id. Includes <see cref="SubDivision"/>.  Returns
+        /// a list of <see cref="TeamExtraLightDto"/> which is 'light' team details.
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        Task<List<TeamExtraLightDto>> GetTeamsBySubDivisionAllAsync(string subdivisionCode);
+
+        /// <summary>
         /// Get all <see cref="DataSourceRanking"/> entities
         /// </summary>
         /// <returns></returns>

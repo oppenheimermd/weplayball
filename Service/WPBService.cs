@@ -400,6 +400,21 @@ namespace WePlayBall.Service
             return teams;
         }
 
+        public async Task<List<TeamExtraLightDto>> GetTeamsBySubDivisionAllAsync(string subdivisionCode)
+        {
+            var subdivToUpper = subdivisionCode.ToUpper();
+
+            var query = await _wpbDataContext.Teams
+                .Include(x => x.SubDivision)
+                .ThenInclude(x => x.Division)
+                .OrderByDescending(x => x.TeamName)
+                .Where(x => x.SubDivision.SubDivisionCode == subdivToUpper)
+                .AsNoTracking()
+                .Select(ModelHelpers.AsTeamExtraLightDto).ToListAsync();
+
+            return query;
+        }
+
         public async Task<List<DataSourceRanking>> GetRankingDataSources()
         {
             var results = await _wpbDataContext.DataSourceRankings
