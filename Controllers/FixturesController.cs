@@ -42,8 +42,9 @@ namespace WePlayBall.Controllers
             return Ok(filteredRequest);
         }
 
-        [HttpGet]
-        [HttpGet("{teamcode}", Name = "Team")]
+        //[HttpGet]
+        //  /api/fixtures/{teamCode}
+        [HttpGet("{teamCode}", Name = "TeamFixtures")]
         public async Task<IActionResult> GetAllMatchesForTeam(string teamCode)
         {
 
