@@ -66,7 +66,7 @@ namespace WePlayBall.Controllers
             });
 
             fixturesQuery.Wait();
-            return Ok(fixturesQuery);
+            return Ok(fixturesQuery.Result);
         }
     }
 }

@@ -74,6 +74,22 @@ namespace WePlayBall.Controllers
             return Ok(allStandings);
         }
 
+        //  /api/teams/[teamCode]
+        [HttpGet("{teamCode}", Name = "TeamResults")]
+        public async Task<IActionResult> GetTeamResultsAll(string teamCode)
+        {
+            if (string.IsNullOrEmpty(teamCode))
+                return NotFound();
+
+            var team = await _wpbService.GetTeamByTeamCodeDto(teamCode);
+            if (team == null)
+                return NotFound();
+
+            var query = _wpbService.GetResultsTeamAsDtoAll(teamCode).OrderBy(x => x.TimeStamp);
+
+            return Ok(query);
+        }
+
         public int GetNumericalDivision(string divCode)
         {
             var caseSwitch = divCode;
@@ -90,6 +106,7 @@ namespace WePlayBall.Controllers
                     throw new InvalidOperationException("Division code not found");
             }
         }
+
 
     }
 

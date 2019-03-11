@@ -261,6 +261,14 @@ namespace WePlayBall.Service
         List<GameResultDto> GetResultsAsDtoAll();
 
         /// <summary>
+        /// Get all <see cref="GameResult"/>(s) as a list of <see cref="GameResultDto"/> for
+        /// team
+        /// </summary>
+        /// <param name="teamCode"></param>
+        /// <returns></returns>
+        List<GameResultDto> GetResultsTeamAsDtoAll(string teamCode);
+
+        /// <summary>
         /// Get all <see cref="TeamStat"/>(s) by <see cref="SubDivision"/> as list
         /// </summary>
         /// <param name="subDivId"></param>
