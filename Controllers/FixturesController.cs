@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +40,32 @@ namespace WePlayBall.Controllers
             };
 
             return Ok(filteredRequest);
+        }
+
+        [HttpGet]
+        [HttpGet("{teamcode}", Name = "Team")]
+        public async Task<IActionResult> GetAllMatchesForTeam(string teamCode)
+        {
+
+            if (string.IsNullOrEmpty(teamCode))
+                return NotFound();
+
+            var team = await _wpbService.GetTeamByTeamCodeDto(teamCode);
+            if (team == null)
+                return NotFound();
+
+            var fixturesQuery = Task.Run<List<FixturesDto>>(() =>
+            {
+                var query = _wpbService.GetFixturesAsDtoAll();
+                var filter = query.Where(x => (x.AwayTeamCode == team.TeamCode ||
+                x.HomeTeamCode == team.TeamCode) && x.FixtureDate >= System.DateTime.Now.Date)
+                .OrderBy(x => x.FixtureDate).ToList();
+                var entity = (filter.Count >= 1) ? filter : null;
+                return entity;
+            });
+
+            fixturesQuery.Wait();
+            return Ok(fixturesQuery);
         }
     }
 }
