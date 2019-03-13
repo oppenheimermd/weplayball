@@ -61,7 +61,7 @@ namespace WePlayBall.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new ApiError(400, "BadRequest", "Password and username required."));
+                return BadRequest(new BadRequestError("Password and username required."));
             }
 
             var newUser = new User()
@@ -75,12 +75,12 @@ namespace WePlayBall.Controllers
             //  Username unique?
             var isUsernameUnique = await _wpbService.UsernameUnique(newUser.Username);
             if (!isUsernameUnique)
-                return BadRequest(new ApiError(400, "BadRequest", $"Username: {registerModel.Username} is already in use."));
+                return BadRequest(new BadRequestError($"Username: {registerModel.Username} is already in use."));
 
             //  Email unique?
             var isEmailUnique = await _wpbService.EmailUnique(newUser.Email);
             if (!isEmailUnique)
-                return BadRequest(new ApiError(400, "BadRequest", $"Email: {registerModel.Email} is already in use."));
+                return BadRequest(new BadRequestError($"Email: {registerModel.Email} is already in use."));
 
             //  Add user
             await _wpbService.CreateUserAsync(newUser, registerModel.Password);
